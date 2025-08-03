@@ -1,14 +1,18 @@
-# FantaHack
+# Fantahackalcio
+
+<p align="center">
+  <img alt="fantahackalcio" src="https://raw.githubusercontent.com/cttynul/fantahacklcio/refs/heads/master/logo.png" height="150" />
+</p>
 
 ## tl;dr
 
-Stanchi delle aste fantacalcio manuali? "Fantahack" è qui per salvarvi! Nato nel 2018 con il mio amico M, questo progetto è passato dalla CLI Python a una dashboard web pronta all'uso. Usate i miei "strani e arzigogolati algoritmi" per dominare l'asta senza dover toccare un solo script o nessun foglio Excel!
+Stanchi delle aste fantacalcio manuali? "Fantahackalcio" è qui per salvarvi! Nato nel 2018 con il mio amico M, questo progetto è passato dalla CLI Python a una dashboard web pronta all'uso. Usate i miei "strani e arzigogolati algoritmi" per dominare l'asta senza dover toccare un solo script o nessun foglio Excel!
 
 E per finire: mi sono disintossicato dal fantacalcio. Questo progetto è la chiusura di un ciclo, un regalo alla community e la fine delle mie domeniche d'ansia. Godetevi lo strumento, ma sappiate che io mi godo la pace!
 
 ---
 
-# [Avvia Fantahack Manager](https://fantahack.netlify.app)
+# [Avvia Fantahackalcio Manager](https://fantahackalcio.netlify.app)
 
 ---
 
