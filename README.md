@@ -1,7 +1,7 @@
 # Fantahackalcio
 
 <p align="center">
-  <img alt="fantahackalcio" src="https://raw.githubusercontent.com/cttynul/fantahacklcio/refs/heads/master/logo.png" height="150" />
+  <img alt="fantahackalcio" src="https://raw.githubusercontent.com/cttynul/fantahacklcio/refs/heads/master/logo.png" height="250" />
 </p>
 
 ## tl;dr
@@ -12,7 +12,8 @@ E per finire: mi sono disintossicato dal fantacalcio. Questo progetto è la chiu
 
 ---
 
-# [Avvia Fantahackalcio Manager](https://fantahackalcio.netlify.app)
+<p align="center"># [Avvia Fantahackalcio Manager](https://fantahackalcio.netlify.app)
+### [Backup Link](https://cttynul.github.io/fantahackalcio)</p>
 
 ---
 
