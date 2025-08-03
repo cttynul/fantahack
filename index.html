@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fantahackalcio</title>
+    <title>Fantahackalcio Manager</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="icon" type="image/png" href="./favicon.png">
@@ -22,7 +22,7 @@
 <body>
     <div class="container">
         <h1>
-            <img src="./logo.png" style="width: 20%">
+            <img src="./logo.png" style="width: 250px">
             <br>Fantahackalcio Manager
         </h1>
 
@@ -59,6 +59,13 @@
                 <label for="roster-setting-select">Impostazione Rosa:</label>
                 <select id="roster-setting-select"></select>
             </div>
+                <button id="save-roster-btn" class="save-btn" title="Salva lista obiettivi">
+                    <i class="fas fa-save"></i>
+                </button>
+                <input type="file" id="load-roster-input" accept=".fhdb" style="display: none;">
+                <button id="load-roster-btn" class="load-btn" title="Carica lista obiettivi">
+                    <i class="fas fa-upload"></i>
+                </button>
             <div class="game-mode-switch">
                 <div class="switch-toggle" id="game-mode-switch-toggle" data-mode="classic">
                     <div class="switch-thumb"></div>
@@ -76,7 +83,7 @@
             </div>
             <div class="filter-actions">
                 <button id="apply-filters" style="display:none">Applica Filtri</button>
-                <button id="reset-filters" style="background-color: rgb(157, 27, 27);">Reset Filtri</button>
+                <button id="reset-filters" style="border: 1px solid #e74c3c; background-color: #fff; color: #e74c3c">Reset Filtri</button>
                 <button id="readme-btn" class="readme-btn" style="background-color: rgb(5, 114, 147);">
                     <i class="fab fa-readme"></i> Readme
                 </button>
@@ -153,7 +160,7 @@
     
     <footer class="main-footer">
         <p>🄯 2025 Fantahackalcio Manager</p>
-        <p>Powered by <a href="https://github.com/cttynul/fantahackalcio" target="_blank" rel="noopener noreferrer">GitHub</a> e da <a href="https://netlify.com" target="_blank" rel="noopener noreferrer">Netlify</a>; <a href="https://icons8.com/icon/KZHjwwenS7oK/database" target="_blank" rel="noopener noreferrer">favicon</a> by <a href="https://icons8.com/" target="_blank" rel="noopener noreferrer">icons8</a></p>
+        <p>Powered by <a href="https://github.com/cttynul/fantahackalcio" target="_blank" rel="noopener noreferrer">GitHub</a> & <a href="https://netlify.com" target="_blank" rel="noopener noreferrer">Netlify</a>; <a href="https://icons8.com/icon/KZHjwwenS7oK/database" target="_blank" rel="noopener noreferrer">favicon</a> by <a href="https://icons8.com/" target="_blank" rel="noopener noreferrer">icons8</a></p>
         <p>Ideato, sviluppato e regalato a voi con il ♡ da <a href="https://github.com/cttynul" target="_blank" rel="noopener noreferrer">cttynul</a></p>
         <!--<div class="footer-links">
             <a href="#" id="about-readme">About & Readme</a>
