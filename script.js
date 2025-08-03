@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const databaseFile = 'Database.csv';
+    const databaseFile = './Database.csv';
     let allPlayersData = [];
     let currentFilteredData = [];
     let selectedPlayers = new Map(); // Map<playerId, playerObject>
