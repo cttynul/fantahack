@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fantahack</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="icon" type="image/png" href="./favicon.png">
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+        </script>
+        <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+            tex2jax: {
+            inlineMath: [['$','$'], ['\\(','\\)']],
+            processEscapes: true
+            }
+        });
+</script>
+</head>
+<body>
+    <div class="container">
+        <h1>
+            <img src="./logo.png" style="width: 20%">
+            <br>Fantahack Manager
+        </h1>
+
+        <div class="filters">
+            <div class="filter-group">
+                <label for="year-select">Anno:</label>
+                <select id="year-select"></select>
+            </div>
+            <div class="filter-group">
+                <label for="role-select">Ruolo:</label>
+                <select id="role-select">
+                    <option value="TUTTI">Tutti</option>
+                    <option value="P">Portieri</option>
+                    <option value="D">Difensori</option>
+                    <option value="C">Centrocampisti</option>
+                    <option value="A">Attaccanti</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="team-select">Squadra:</label>
+                <select id="team-select">
+                    <option value="TUTTI">Tutte</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="search-player">Cerca Giocatore:</label>
+                <input type="text" id="search-player" placeholder="Nome giocatore...">
+            </div>
+            <div class="filter-group">
+                <label for="fantamilioni-input">Fantamilioni:</label>
+                <input type="number" id="fantamilioni-input" value="500" min="0" step="1">
+            </div>
+            <div class="filter-group">
+                <label for="roster-setting-select">Impostazione Rosa:</label>
+                <select id="roster-setting-select"></select>
+            </div>
+            <div class="game-mode-switch">
+                <div class="switch-toggle" id="game-mode-switch-toggle" data-mode="classic">
+                    <div class="switch-thumb"></div>
+                    <div class="switch-option" data-mode="classic">Classic</div>
+                    <div class="switch-option" data-mode="mantra">Mantra</div>
+                </div>
+            </div>
+            <div class="filter-group checkbox-group">
+                <input type="checkbox" id="show-without-team">
+                <label for="show-without-team">Mostra Svincolati</label>
+            </div>
+            <div class="filter-group checkbox-group">
+                <input type="checkbox" id="hide-pachinari">
+                <label for="hide-pachinari">Nascondi Pachinari</label>
+            </div>
+            <div class="filter-actions">
+                <button id="apply-filters" style="display:none">Applica Filtri</button>
+                <button id="reset-filters" style="background-color: rgb(157, 27, 27);">Reset Filtri</button>
+                <button id="readme-btn" class="readme-btn" style="background-color: rgb(5, 114, 147);">
+                    <i class="fab fa-readme"></i> Readme
+                </button>
+                <button id="help-btn" class="help-btn" style="background-color: rgb(5, 114, 147);">
+                    <i class="fas fa-question-circle"></i> Aiuto
+                </button>
+                <button id="download-db" class="download-btn">
+                    <i class="fas fa-file-csv"></i> Download Database
+                </button>
+                <button id="download-objectives" class="download-btn">
+                    <i class="fas fa-file-csv"></i> Download Obiettivi
+                </button>
+            </div>
+        </div>
+
+        <div id="disclaimer-message" class="disclaimer">
+            <i class="fas fa-info-circle"></i> Le statistiche per la stagione selezionata non sono definitive. Alcuni valori potrebbero essere basati sulla stagione precedente.
+        </div>
+
+        <div class="objectives-section">
+            <div class="section-header">
+                <h2>Obiettivi</h2></div>
+                <div class="section-header">
+                    <span class="budget-summary-box">
+                        <span class="budget-summary-line">Fantamilioni: <span id="fantamilioni-input-display">500</span></span>
+                        <span class="budget-summary-line">Spesa: <span id="total-spent-value">0</span></span>
+                        <span class="budget-summary-line">Business Plan: <span id="business-plan-value">500</span></span>
+                    </span>
+                    <span id="department-summary" class="department-summary">
+                        </span>
+            </div>
+            <div class="objectives-table-container">
+                <table id="objectives-table">
+                    <thead>
+                        <tr>
+                            </tr>
+                    </thead>
+                    <tbody>
+                        </tbody>
+                </table>
+                <p id="no-objectives-message" class="info-message active">Nessun giocatore negli obiettivi. Seleziona i giocatori dalla tabella in basso.</p>
+            </div>
+            <div class="objective-actions">
+                <button id="clear-objectives">Svuota Obiettivi</button>
+            </div>
+        </div>
+        
+        <div class="table-spoiler collapsed">
+            <div class="spoiler-header" id="players-table-spoiler-header">
+                <h2><i class="fas fa-database"></i> Database</h2>
+                <span class="spoiler-icon fas fa-chevron-down"></span>
+            </div>
+            <div class="spoiler-content">
+                <div class="summary">
+                    <div>Giocatori Selezionati: <span id="selected-players-count">0</span></div>
+                    <div>Costo Stimato (Quote Iniziali): <span id="estimated-cost">0</span></div>
+                    <button id="clear-selection">Deseleziona Riga</button>
+                </div>
+                <div class="table-container">
+                    <table id="players-table">
+                        <thead>
+                            <tr>
+                                <th class="loading-message" colspan="99">Caricamento dati. Attendere...</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    
+    <footer class="main-footer">
+        <p>🄯 2025 Fantahack Manager</p>
+        <p>Powered by <a href="https://github.com/cttynul/fantahack" target="_blank" rel="noopener noreferrer">GitHub</a> e da <a href="https://netlify.com" target="_blank" rel="noopener noreferrer">Netlify</a>; <a href="https://icons8.com/icon/KZHjwwenS7oK/database" target="_blank" rel="noopener noreferrer">favicon</a> by <a href="https://icons8.com/" target="_blank" rel="noopener noreferrer">icons8</a></p>
+        <p>Ideato, sviluppato e regalato a voi con il ♡ da <a href="https://github.com/cttynul" target="_blank" rel="noopener noreferrer">cttynul</a></p>
+        <!--<div class="footer-links">
+            <a href="#" id="about-readme">About & Readme</a>
+        </div>-->
+    </footer>
+
+    <div id="cookie-banner" class="cookie-banner">
+        <button type="button" class="btn-close" id="close-banner"><i class="bi bi-x"></i></button>
+        <p>Questo sito utilizza cookie essenziali per il suo corretto funzionamento. Continuando la navigazione accetti l'uso dei cookie.</p>
+        <button id="accept-cookies" class="cookie-btn-accept">Accetta <i class="bi bi-check"></i></button>
+        <button id="decline-cookies" class="cookie-btn-reject">Rifiuta <i class="bi bi-x"></i></button>
+    </div>
+
+    <div id="helpModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div id="help-content">
+                <!-- Content will be inserted via JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <div id="readmeModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div id="readme-content">
+                <!-- Content will be inserted via JavaScript -->
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <script src="script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/2.1.0/showdown.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,977 @@
+:root {
+    /* Nuovi colori a tema Verde Excel */
+    --primary-color: #408e5e; /* Verde principale (es. intestazioni tabella, bottoni) */
+    --secondary-color: #2c3e50; /* Testo scuro, simile a prima */
+    --accent-color: #e74c3c;    /* Rosso per alert/errori, invariato */
+    --light-bg: #ecf0f1;        /* Sfondo chiaro, invariato */
+    --dark-text: #333;          /* Testo scuro, invariato */
+    --white: #fff;              /* Bianco, invariato */
+    --success-green: #2ecc71;   /* Verde più chiaro per feedback positivi */
+    --warning-orange: #f39c12;  /* Arancione per avvisi, invariato */
+    --hover-green: #229a53;     /* Verde per hover */
+    --secondary-dark-green: #1a4d2e; /* NUOVO: Verde scuro per sezioni di riepilogo */
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: var(--light-bg);
+    color: var(--dark-text);
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 20px auto;
+    background-color: var(--white);
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    color: var(--primary-color);
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 2.2em;
+}
+
+.filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 25px;
+    padding: 15px;
+    background-color: #f8f8f8;
+    border-radius: 8px;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+    align-items: flex-end;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    min-width: 150px;
+}
+
+.filter-group label {
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: var(--secondary-color);
+    font-size: 0.9em;
+}
+
+/* Stili per le listbox (select) e input text/number */
+.filters select,
+.filters input[type="number"],
+.filters input[type="text"] {
+    padding: 10px 15px;
+    border: 1px solid #c0c0c0;
+    border-radius: 8px;
+    font-size: 1em;
+    width: 100%;
+    box-sizing: border-box;
+    background-color: var(--white);
+    color: var(--dark-text);
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292%22%20height%3D%22292%22%3E%3Cpath%20fill%3D%22%23666%22%20d%3D%22M287%2069L146%20208%205%2069z%22%2F%3E%3C%2Fsvg%3E');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 12px;
+    cursor: pointer;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.filters select:focus,
+.filters input[type="number"]:focus,
+.filters input[type="text"]:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.2);
+}
+
+.filter-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.filters button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: var(--primary-color);
+    color: var(--white);
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.filters button:hover {
+    background-color: var(--hover-green);
+}
+
+.summary {
+    display: flex;
+    flex-wrap: wrap; /* Permette il wrap dei componenti */
+    justify-content: flex-end;
+    align-items: center;
+    gap: 15px 25px; /* Spazio tra gli elementi */
+    margin-bottom: 20px;
+    padding: 10px 0;
+    font-size: 1.1em;
+    font-weight: bold;
+    color: var(--secondary-color);
+}
+
+.summary > div {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    white-space: nowrap; /* Impedisce il wrap del testo all'interno di un singolo elemento */
+}
+
+.summary button {
+    padding: 8px 15px;
+    border: 1px solid var(--accent-color);
+    border-radius: 5px;
+    background-color: transparent;
+    color: var(--accent-color);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.summary button:hover {
+    background-color: var(--accent-color);
+    color: var(--white);
+}
+
+/* Nuovi stili per la sezione Obiettivi */
+.objectives-section {
+    margin-bottom: 30px;
+    background-color: #fdfdfd;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.objectives-section .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    flex-wrap: wrap; /* Permette il wrap per responsive */
+    gap: 10px; /* Spazio tra gli elementi */
+}
+
+.objectives-section h2 {
+    color: var(--primary-color);
+    margin: 0;
+    font-size: 1.5em;
+    display: flex;
+    align-items: flex-start; /* Allinea l'h2 e il budget box in alto */
+    gap: 15px;
+    flex-wrap: wrap; /* Permette il wrap per responsive */
+}
+
+.budget-summary-box {
+    display: flex;
+    flex-direction: row; /* Modificato da column a row */
+    flex-wrap: wrap; /* Permette il wrap orizzontale */
+    justify-content: space-around; /* Distribuisce uniformemente gli elementi */
+    gap: 8px 15px; /* Spazio tra gli elementi, orizzontale e verticale */
+    background-color: var(--secondary-dark-green); /* Nuovo colore scuro */
+    color: var(--white);
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 1.0em;
+    font-weight: normal;
+    /* white-space: nowrap; REMOSSO per permettere wrap */
+    align-items: center; /* Centra verticalmente il contenuto */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    min-width: 300px; /* Assicura che sia abbastanza largo */
+}
+
+.budget-summary-line {
+    display: flex;
+    /* justify-content: space-between; RIMOSSO */
+    /* width: 100%; RIMOSSO */
+    align-items: center; /* Allinea testo e valore */
+    gap: 5px; /* Spazio tra etichetta e valore */
+}
+
+#business-plan-value, #total-spent-value {
+    font-weight: bold;
+    color: var(--white); /* Bianco per il valore */
+}
+
+/* Colori dinamici per il business plan */
+#business-plan-value.positive {
+    color: #a8e6cf; /* Verde chiaro per positivo, visibile su sfondo scuro */
+}
+
+#business-plan-value.negative {
+    color: #ff9999; /* Rosso chiaro per negativo, visibile su sfondo scuro */
+}
+
+/* Stili per le percentuali reparto */
+.department-summary {
+    display: flex;
+    flex-wrap: wrap; /* Permette wrap */
+    gap: 8px 8px; /* Spazio tra i reparti */
+    margin-left: 2px; /* Spazio dal business plan */
+    font-size: 0.9em;
+    font-weight: lighter;
+}
+
+.department-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 8px;
+    border-radius: 15px;
+    background-color: #f0f0f0;
+    color: #555;
+}
+
+.department-item.status-ok {
+    background-color: #e6ffe6; /* Verde molto chiaro */
+    color: #27ae60; /* Testo verde */
+    border: 1px solid #a8e6cf;
+}
+
+.department-item.status-warning {
+    background-color: #fff8e6; /* Giallo molto chiaro */
+    color: #f39c12; /* Testo giallo/arancio */
+    border: 1px solid #ffeeba;
+}
+
+.objective-actions button {
+    padding: 8px 15px;
+    border: 1px solid var(--accent-color);
+    border-radius: 5px;
+    background-color: transparent;
+    color: var(--accent-color);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.objective-actions button:hover {
+    background-color: var(--accent-color);
+    color: var(--white);
+}
+
+.objectives-table-container {
+    overflow-x: auto;
+}
+
+#objectives-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    background-color: var(--white);
+}
+
+#objectives-table th,
+#objectives-table td {
+    padding: 12px 15px;
+    border: 1px solid #e0e0e0;
+    text-align: left;
+    white-space: nowrap;
+}
+
+/* Stili per le intestazioni della tabella obiettivi - Rendi cliccabili */
+#objectives-table th {
+    background-color: var(--primary-color);
+    color: var(--white);
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.9em;
+    cursor: pointer; /* Aggiungi cursor pointer per indicare che è cliccabile */
+    position: relative; /* Per le icone di ordinamento */
+    padding-right: 25px; /* Spazio per le icone di ordinamento */
+    user-select: none; /* Impedisce la selezione del testo */
+}
+
+#objectives-table th:hover {
+    background-color: var(--hover-green);
+}
+
+/* Stili per le icone di ordinamento nelle intestazioni obiettivi */
+#objectives-table th::after {
+    content: '';
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    border: 5px solid transparent;
+    transition: transform 0.2s ease;
+    opacity: 0.6;
+}
+
+#objectives-table th.sorted-asc::after {
+    border-top-color: var(--white);
+    transform: translateY(-50%) rotate(0deg);
+    opacity: 1;
+}
+
+#objectives-table th.sorted-desc::after {
+    border-bottom-color: var(--white);
+    transform: translateY(-50%) rotate(180deg);
+    opacity: 1;
+}
+
+#objectives-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+#objectives-table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+#objectives-table .remove-player-btn {
+    background-color: var(--accent-color);
+    color: var(--white);
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.85em;
+    transition: background-color 0.3s ease;
+}
+
+#objectives-table .remove-player-btn:hover {
+    background-color: #c0392b; /* Rosso più scuro */
+}
+
+/* Stili per la cella del Budget modificabile nella tabella Obiettivi */
+#objectives-table .budget-cell,
+#objectives-table .spent-cell { /* Applica stili anche alla nuova cella "Spesa" */
+    position: relative;
+    padding-right: 30px;
+}
+
+#objectives-table .budget-cell .edit-icon,
+#objectives-table .spent-cell .edit-icon { /* Applica stili anche alla nuova cella "Spesa" */
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #888;
+    transition: color 0.2s ease;
+    font-size: 0.9em;
+}
+
+#objectives-table .budget-cell .edit-icon:hover,
+#objectives-table .spent-cell .edit-icon:hover { /* Applica stili anche alla nuova cella "Spesa" */
+    color: var(--primary-color);
+}
+
+#objectives-table .budget-cell input[type="number"],
+#objectives-table .spent-cell input[type="number"] { /* Applica stili anche alla nuova cella "Spesa" */
+    width: calc(100% - 10px);
+    padding: 5px;
+    border: 1px solid var(--primary-color);
+    border-radius: 4px;
+    font-size: 1em;
+    box-sizing: border-box;
+    -moz-appearance: textfield;
+}
+
+#objectives-table .budget-cell input[type="number"]::-webkit-outer-spin-button,
+#objectives-table .budget-cell input[type="number"]::-webkit-inner-spin-button,
+#objectives-table .spent-cell input[type="number"]::-webkit-outer-spin-button, /* Applica stili anche alla nuova cella "Spesa" */
+#objectives-table .spent-cell input[type="number"]::-webkit-inner-spin-button { /* Applica stili anche alla nuova cella "Spesa" */
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.info-message {
+    background-color: #e0f2f7; /* Azzurro chiaro */
+    color: #2e86c1; /* Blu medio */
+    border: 1px solid #b3e5fc; /* Azzurro più scuro */
+    padding: 10px 15px;
+    border-radius: 5px;
+    margin-top: 15px;
+    font-style: italic;
+    text-align: center;
+    transition: opacity 0.3s ease, max-height 0.3s ease;
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+}
+
+.info-message.active {
+    max-height: 100px;
+    opacity: 1;
+    padding: 10px 15px;
+}
+
+/* Stili per la funzionalità spoiler della tabella principale */
+.table-spoiler {
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 25px;
+    background-color: var(--white);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.spoiler-header {
+    background-color: var(--primary-color);
+    color: var(--white);
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    font-size: 1.0em;
+    font-weight: bold;
+    border-bottom: 1px solid var(--primary-color);
+}
+
+.spoiler-header:hover {
+    background-color: var(--hover-green);
+}
+
+.spoiler-header h2 {
+    margin: 0;
+    font-size: 1.4em;
+    color: var(--white);
+}
+
+.spoiler-icon {
+    transition: transform 0.3s ease;
+}
+
+.table-spoiler.collapsed .spoiler-icon {
+    transform: rotate(-90deg);
+}
+
+.table-spoiler:not(.collapsed) .spoiler-icon {
+    transform: rotate(0deg);
+}
+
+.spoiler-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease-out;
+}
+
+.table-spoiler:not(.collapsed) .spoiler-content {
+    max-height: 2000px; /* Altezza sufficiente a mostrare il contenuto */
+}
+
+/* Nuovo stile per lo scorrimento della tabella principale */
+.table-container {
+    max-height: 500px; /* Altezza massima per la tabella */
+    overflow-y: auto; /* Abilita lo scroll verticale */
+    overflow-x: auto; /* Abilita lo scroll orizzontale se necessario */
+    padding-bottom: 5px; /* Spazio per lo scrollbar orizzontale se appare */
+}
+
+#players-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 0;
+    background-color: var(--white);
+}
+
+#players-table th,
+#players-table td {
+    padding: 12px 15px;
+    border: 1px solid #e0e0e0;
+    text-align: left;
+    white-space: nowrap;
+}
+
+#players-table th {
+    background-color: var(--primary-color);
+    color: var(--white);
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.9em;
+}
+
+#players-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+#players-table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+#players-table th {
+    cursor: pointer;
+    position: relative;
+    padding-right: 25px;
+    user-select: none;
+}
+
+#players-table th:hover {
+    background-color: var(--hover-green);
+}
+
+#players-table th::after {
+    content: '';
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    border: 5px solid transparent;
+    transition: transform 0.2s ease;
+    opacity: 0.6;
+}
+
+#players-table th.sorted-asc::after {
+    border-top-color: var(--white);
+    transform: translateY(-50%) rotate(0deg);
+    opacity: 1;
+}
+
+#players-table th.sorted-desc::after {
+    border-bottom-color: var(--white);
+    transform: translateY(-50%) rotate(180deg);
+    opacity: 1;
+}
+
+#players-table tbody tr.selected-for-auction {
+    background-color: #e6ffe6; /* Un verde chiaro per la selezione */
+    font-weight: bold;
+    outline: 2px solid var(--primary-color); /* Bordo verde principale */
+}
+
+/* Nuovi stili per la colonna del pulsante + */
+#players-table .add-column {
+    width: 40px;
+    text-align: center;
+    background-color: var(--primary-color);
+    cursor: default; /* Non cliccabile come le altre intestazioni */
+}
+
+#players-table .add-button-cell {
+    text-align: center;
+    width: 40px;
+    padding: 8px;
+}
+
+.add-player-btn {
+    background-color: var(--primary-color);
+    color: var(--white);
+    border: none;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.add-player-btn:hover {
+    background-color: var(--hover-green);
+    transform: scale(1.1);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+.add-player-btn:active {
+    transform: scale(0.95);
+}
+
+.loading-message {
+    text-align: center;
+    padding: 20px;
+    color: #555;
+    font-style: italic;
+}
+
+.not-available {
+    color: #999;
+    font-style: italic;
+    background-color: #f2f2f2;
+}
+
+.positive-diff {
+    color: var(--success-green);
+    font-weight: bold;
+}
+
+.negative-diff {
+    color: var(--accent-color);
+    font-weight: bold;
+}
+
+.fantahack-value {
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+.unicorn-emoji {
+    font-size: 1.2em;
+    animation: sparkle 1.5s infinite alternate;
+    display: inline-block;
+}
+
+.not-unicorn-emoji {
+    font-size: 1.2em;
+    opacity: 0.3;
+}
+
+@keyframes sparkle {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+        text-shadow: 0 0 5px rgba(255, 255, 0, 0.5);
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 0.8;
+        text-shadow: 0 0 10px rgba(255, 255, 0, 0.8);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+        text-shadow: 0 0 5px rgba(255, 255, 0, 0.5);
+    }
+}
+
+.top-player-emoji {
+    font-size: 1.2em;
+    animation: bounceIn 0.8s ease-out;
+    display: inline-block;
+    color: #f1c40f;
+}
+
+.not-top-player-emoji {
+    font-size: 1.2em;
+    opacity: 0.3;
+}
+
+@keyframes bounceIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.3);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.1);
+    }
+    70% {
+        transform: scale(0.9);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.checkbox-group {
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    margin-top: 15px;
+}
+
+.checkbox-group input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    margin: 0;
+    cursor: pointer;
+    accent-color: var(--primary-color);
+}
+
+.game-mode-switch {
+    margin-top: 15px;
+}
+
+.switch-toggle {
+    display: flex;
+    position: relative;
+    width: 220px;
+    height: 40px;
+    background-color: #e0e0e0;
+    border-radius: 20px;
+    overflow: hidden;
+    cursor: pointer;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.switch-option {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--secondary-color);
+    font-weight: bold;
+    font-size: 0.95em;
+    z-index: 1;
+    transition: color 0.3s ease;
+}
+
+.switch-option.active {
+    color: var(--white);
+}
+
+.switch-thumb {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: calc(50% - 4px);
+    height: calc(100% - 4px);
+    background-color: var(--primary-color);
+    border-radius: 18px;
+    transition: transform 0.3s ease-in-out;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.switch-toggle[data-mode="mantra"] .switch-thumb {
+    transform: translateX(100%);
+}
+
+/* Stili per il disclaimer */
+.disclaimer {
+    background-color: #fff3cd; /* Giallo chiaro */
+    color: #856404; /* Testo giallo scuro */
+    border: 1px solid #ffeeba; /* Bordo giallo chiaro */
+    padding: 12px 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    font-size: 0.95em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: opacity 0.4s ease-out, max-height 0.4s ease-out, padding 0.4s ease-out, margin-bottom 0.4s ease-out;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.disclaimer.active {
+    opacity: 1;
+    max-height: 50px;
+    padding: 12px 20px;
+    margin-bottom: 20px;
+}
+
+.disclaimer i {
+    font-size: 1.2em;
+    color: #ffd700;
+}
+
+/* Stili per la colorazione della FantaMedia */
+.fm-green {
+    background-color: #e6ffe6; /* Verde chiaro */
+    color: #1a7e28; /* Testo verde scuro */
+    font-weight: bold;
+}
+
+.fm-yellow {
+    background-color: #fffacd; /* Giallo chiaro */
+    color: #b38800; /* Testo giallo scuro */
+    font-weight: bold;
+}
+
+.fm-red {
+    background-color: #ffe6e6; /* Rosso chiaro */
+    color: #c0392b; /* Testo rosso scuro */
+    font-weight: bold;
+}
+
+/* --- Footer --- */
+.main-footer {
+    background-color: var(--light-bg); 
+    color: var(--secondary-dark-green); /* Testo bianco */
+    padding: 10px 0;
+    text-align: center;
+    font-size: 0.9em;
+    margin-top: 40px; /* Spazio sopra il footer */
+}
+
+.main-footer p {
+    margin: 0 0 0px 0; /* Spazio tra i paragrafi */
+}
+
+.main-footer a {
+    color: var(--primary-color); /* Colore link primario */
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.main-footer a:hover {
+    color: var(--hover-green); /* Colore hover per i link */
+}
+
+.footer-links {
+    margin-top: 4px;
+}
+
+.footer-links a {
+    margin: 0 10px;
+    border-right: 1px solid rgba(255, 255, 255, 0.3); /* Separatore per i link */
+    padding-right: 10px;
+}
+
+.footer-links a:last-child {
+    border-right: none; /* Rimuovi il separatore dall'ultimo link */
+    padding-right: 0;
+}
+
+/* Add to style.css */
+
+/* Sticky headers for tables */
+#players-table thead tr th {
+    position: sticky;
+    top: 0;
+    background: #27ae60;
+    z-index: 10;
+    color: white;
+}
+
+/* Modal styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 800px;
+    max-height: 80vh;
+    overflow-y: auto;
+    border-radius: 5px;
+    position: relative;
+    overflow-x: hidden; /* Aggiungi questo per gestire meglio il contenuto matematico */
+}
+
+.close-modal {
+    position: absolute;
+    right: 15px;
+    top: 10px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* Modified buttons */
+.remove-player-btn-mini {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.remove-player-btn-mini:hover {
+    background-color: #c0392b;
+}
+
+.filter-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.help-btn {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 15px;
+    cursor: pointer;
+}
+
+.download-btn {
+    background-color: #2ecc71;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 15px;
+    cursor: pointer;
+}
+
+/* Aggiungi questi stili per le formule matematiche */
+.MathJax_Display {
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 0.5em 0;
+}
+
+
+.cookie-banner {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #fff;
+    color: #2e2e2e9d;
+    padding: 9pt;
+    font-size: 11pt;
+    text-align: center;
+    z-index: 1000;
+    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.cookie-btn-accept {
+    background: var(--primary-color);
+    color: white;
+    padding: 10pt 10pt;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    margin: 0 7pt;
+    font-size: 12pt;
+    border-radius: 5pt;
+}
+
+.cookie-btn-reject {
+    background: linear-gradient(90deg, #ececec, #e0dfdf);
+    color: rgb(17, 17, 17);
+    padding: 10pt 10pt;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    margin: 0 7pt;
+    font-size: 12pt;
+    border-radius: 5pt;
+}
+
+.cookie-btn-accept:hover {
+    background-color: var(--hover-green);
+}
+
+.cookie-btn-reject:hover {
+    background-color: #d8d8d8bb;
+}
+
+.cookie-banner p {
+    margin-bottom: 10px;
+}
+
+.cookie-banner .btn-close {
+    background: transparent;
+    border: none;
+    color: rgba(54, 54, 54, 0.582);
+    font-size: 20pt;
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    cursor: pointer;
+}
