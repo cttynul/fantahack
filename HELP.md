@@ -61,32 +61,32 @@
 
 ## Come Vengono Calcolati gli Indicatori Statistici
 
-Qui di seguito viene illustrato come vengono derivati gli indicatori **Fattore FantaHack**, **Unicorno** e **Top Player**
+Qui di seguito viene illustrato come vengono derivati gli indicatori **Fattore FantaHack**, **Unicorno** e **Top Player**, se proprio siete curiosi come i matti (anche troppo).
 
 ### 1. Calcolo del Fattore FantaHack
 
 Il **Fattore FantaHack** è una metrica proprietaria chiave. Ecco come viene derivato:
 
-* **Punteggio Performance Ponderato ($Punteggio Performance Ponderato$)**:
+* **Punteggio Performance Ponderato ($PpP$)**:
     * Per ogni giocatore, viene calcolato un punteggio di performance per ogni stagione utilizzando `Fm` (FantaMedia) e `Pv` (Partite Giocate).
     * La formula utilizzata è:
-        $$Fm \times \frac{Pv}{MAX Partite Stagione}$$
-        dove `MAX Partite Stagione` è 38.
-    * Questi punteggi di performance stagionali vengono poi ponderati dai `pesi per anno` (ad esempio, 2025 26 ha un peso di 1.0, 2024 25 ha 1.2, 2023 24 ha 0.6 e 2022 23 ha 0.2).
-    * La somma di questi punteggi di performance ponderati fornisce il `Punteggio Performance Ponderato`. I valori `Fm` o `Pv` mancanti (inizialmente **666**) vengono trattati come `NaN` ed esclusi da questo calcolo.
-* **Punteggio Performance Ponderato Normalizzato ($Punteggio Performance Ponderato Normalizzato$)**:
+        $$Fm \times \frac{Pv}{38}$$
+        dove 38 è il numero di `Max Partite Stagione`.
+    * Questi punteggi di performance stagionali vengono poi ponderati dai `pesi per anno` (ad esempio, 2025-26 ha un peso di 1.0, 2024-25 ha 1.2, 2023-24 ha 0.6 e 2022 -3 ha 0.2).
+    * La somma di questi punteggi di performance ponderati fornisce il `Punteggio Performance Ponderato`. I valori `Fm` o `Pv` mancanti vengono trattati come `NaN` ed esclusi da questo calcolo.
+* **Punteggio Performance Ponderato Normalizzato ($PppN$)**:
     * Questo punteggio si ottiene dividendo il `Punteggio Performance Ponderato` per il `Punteggio Performance Ponderato` massimo tra tutti i giocatori, normalizzandolo in un intervallo tra 0 e 1.
 * **Fattore FantaHack Finale ($Fattore Fantahack$)**:
     * Questo è calcolato dividendo il `Punteggio Performance Ponderato Normalizzato` per il logaritmo naturale della quotazione della stagione corrente (`Qt.A_2025-26`) più uno.
     * La formula è:
-        $$\frac{Punteggio Performance Ponderato Normalizzato}{\log(QtA + 1)}$$
+        $$\frac{PppN}{\log(QtA + 1)}$$
     * I giocatori con quotazioni attuali non valide o pari a zero avranno un `Fattore FantaHack` di 0.
 
 ### 2. Calcolo dei Top Player
 
 Per identificare i **Top Player**, vengono calcolate due medie ponderate:
 
-* **Media Fantamedia Ponderata ($Media Fantamedia Ponderata$)**:
+* **Media Fantamedia Ponderata ($MFmP$)**:
     * Questa è la media di `Fm` attraverso le stagioni specificate, ponderata dai `pesi per anno`.
 * **Media Partite Giocate Ponderata ($Media Partite Giocate Ponderata$)**:
     * Questa è la media di `Pv` attraverso le stagioni specificate, ponderata dai `pesi per anno`.
