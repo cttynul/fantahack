@@ -12,8 +12,8 @@ E per finire: mi sono disintossicato dal fantacalcio. Questo progetto è la chiu
 
 ---
 
-<p align="center"># [Avvia Fantahackalcio Manager](https://fantahackalcio.netlify.app)
-### [Backup Link](https://cttynul.github.io/fantahackalcio)</p>
+# [Avvia Fantahackalcio Manager](https://fantahackalcio.netlify.app)
+### [Backup Link](https://cttynul.github.io/fantahackalcio)
 
 ---
 
