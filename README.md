@@ -1,10 +1,10 @@
 # About & Readme
 
-# <p text-align="center"><img style="max-width:40%" src="./logo.png"></p>
+# <p text-align="center"><img style="max-width:250px" src="./logo.png"></p>
 
 ## tl;dr
 
-Stanchi delle aste fantacalcio manuali? "Fantahacklcio" è qui per salvarvi! Nato nel 2018 con il mio amico M, questo progetto è passato dalla CLI Python a una dashboard web pronta all'uso. Usate i miei "strani e arzigogolati algoritmi" per dominare l'asta senza dover toccare un solo script o nessun foglio Excel!
+Stanchi delle aste fantacalcio manuali? "fantahackalcio" è qui per salvarvi! Nato nel 2018 con il mio amico M, questo progetto è passato dalla CLI Python a una dashboard web pronta all'uso. Usate i miei "strani e arzigogolati algoritmi" per dominare l'asta senza dover toccare un solo script o nessun foglio Excel!
 
 E per finire: mi sono disintossicato dal fantacalcio. Questo progetto è la chiusura di un ciclo, un regalo alla community e la fine delle mie domeniche d'ansia. Godetevi lo strumento, ma sappiate che io mi godo la pace!
 

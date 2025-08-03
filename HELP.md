@@ -1,9 +1,9 @@
-# Guida a FantaHack
+# Guida a fantahackalcio
 
 # <p text-align="center"><img style="max-width:40%" src="./logo.png"></p>
 
 ## Panoramica
-**FantaHack** è uno strumento avanzato per l'analisi delle prestazioni dei giocatori nel Fantacalcio, progettato per **ottimizzare le tue scelte durante l'asta**.
+**fantahackalcio** è uno strumento avanzato per l'analisi delle prestazioni dei giocatori nel Fantacalcio, progettato per **ottimizzare le tue scelte durante l'asta**.
 
 ---
 
