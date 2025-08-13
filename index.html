@@ -20,6 +20,11 @@
 </script>
 </head>
 <body>
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Caricamento Database Fantahackalcio</div>
+        <div class="loading-progress">Attendere prego...</div>
+    </div>
     <div class="container">
         <h1>
             <img src="./logo.png" style="width: 250px">
@@ -138,9 +143,17 @@
             </div>
             <div class="spoiler-content">
                 <div class="summary">
-                    <div>Giocatori Selezionati: <span id="selected-players-count">0</span></div>
-                    <div>Costo Stimato (Quote Iniziali): <span id="estimated-cost">0</span></div>
-                    <button id="clear-selection">Deseleziona Riga</button>
+                    <div class="role-counts">
+                        <span style="font-weight: bold;">Selezione</span>
+                        <span>Portieri: <span style="color:#229a53;font-weight: bold;" id="selected-gk-count">0</span>/3</span>
+                        <span>Difensori: <span style="color:#229a53;font-weight: bold;" id="selected-def-count">0</span>/8</span>
+                        <span>Centrocampisti: <span style="color:#229a53;font-weight: bold;" id="selected-mid-count">0</span>/8</span>
+                        <span>Attaccanti: <span style="color:#229a53;font-weight: bold;" id="selected-att-count">0</span>/6</span>
+                        <button id="goalkeepers-btn" class="role-btn">Griglia Portieri</button>
+                        <button id="penalties-btn" class="role-btn">Rigoristi e Tiratori</button>
+
+                    </div>
+                    <button id="clear-selection" style="display:none">Deseleziona Riga</button>
                 </div>
                 <div class="table-container">
                     <table id="players-table">

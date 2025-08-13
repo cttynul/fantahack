@@ -110,6 +110,15 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     let currentRosterSetting = ROSTER_SETTINGS.balanced; // Impostazione di default
 
+    function closeLoadingModal() {
+        const loadingModal = document.getElementById('loadingOverlay');
+
+        // Controlla se l'elemento esiste prima di tentare di modificarlo
+        if (loadingModal) {
+            loadingModal.style.display = 'none';
+        }
+    }
+
     async function loadCSV() {
         return new Promise((resolve, reject) => {
             Papa.parse(databaseFile, {
@@ -204,6 +213,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             allPlayersData = await loadCSV();
             console.log("Dati caricati:", allPlayersData.length, "giocatori.");
+            closeLoadingModal()
 
             allPlayersData.forEach(player => {
                 for (const key in player) {
@@ -555,6 +565,26 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Update the player counts by role
+    function updatePlayerCounts() {
+        const roleCounts = {
+            'P': 0, 'D': 0, 'C': 0, 'A': 0
+        };
+
+        const selectedYear = yearSelect.value;
+        selectedPlayers.forEach(player => {
+            const role = player[`R_${selectedYear}`];
+            if (role) {
+                roleCounts[role]++;
+            }
+        });
+
+        document.getElementById('selected-gk-count').textContent = roleCounts['P'];
+        document.getElementById('selected-def-count').textContent = roleCounts['D'];
+        document.getElementById('selected-mid-count').textContent = roleCounts['C'];
+        document.getElementById('selected-att-count').textContent = roleCounts['A'];
+    }
+
     function sortMainTableData(columnName, direction, toggle = true) {
         if (toggle && currentMainTableSortColumn === columnName) {
             currentMainTableSortDirection = (currentMainTableSortDirection === 'asc') ? 'desc' : 'asc';
@@ -619,6 +649,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (tablePlayerRow) tablePlayerRow.classList.add('selected-for-auction');
         }
         updateAuctionSummary();
+        updatePlayerCounts();
         updateObjectivesTable();
     }
 
@@ -773,6 +804,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (currentObjectivesTableSortColumn) {
             sortObjectivesTableData(currentObjectivesTableSortColumn, currentObjectivesTableSortDirection, playersForObjectivesTable);
         }
+
 
         playersForObjectivesTable.forEach(player => {
             const row = objectivesTableBody.insertRow();
@@ -1481,6 +1513,35 @@ document.addEventListener('DOMContentLoaded', () => {
             closeModal(event.target);
         }
     }
+
+    // Add handlers for the new modal buttons
+    document.getElementById('goalkeepers-btn').addEventListener('click', () => {
+        fetch('PORTIERI.md')
+            .then(response => response.text())
+            .then(text => {
+                const converter = new showdown.Converter();
+                const html = converter.makeHtml(text);
+                showModal(helpModal, html);
+            })
+            .catch(error => {
+                console.error('Error loading goalkeepers file:', error);
+                showModal(helpModal, '<p>Errore nel caricamento del file.</p>');
+            });
+    });
+
+    document.getElementById('penalties-btn').addEventListener('click', () => {
+        fetch('RIGORISTI.md')
+            .then(response => response.text())
+            .then(text => {
+                const converter = new showdown.Converter();
+                const html = converter.makeHtml(text);
+                showModal(helpModal, html);
+            })
+            .catch(error => {
+                console.error('Error loading penalties file:', error);
+                showModal(helpModal, '<p>Errore nel caricamento del file.</p>');
+            });
+    });
 
     const saveRosterBtn = document.getElementById('save-roster-btn');
     const loadRosterBtn = document.getElementById('load-roster-btn');
