@@ -629,6 +629,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         let estimatedCost = 0; // Costo basato sui budget personalizzati
         let totalActualSpent = 0; // Spesa totale basata sul campo 'actualSpent'
+        let totalCustomBudget = 0; // Somma dei budget personalizzati
 
         // Spesa per reparto
         const spentByDepartment = { P: 0, D: 0, C: 0, A: 0 };
@@ -637,6 +638,7 @@ document.addEventListener('DOMContentLoaded', () => {
         selectedPlayers.forEach(player => {
             if (player.customBudget !== null && !isNaN(player.customBudget)) {
                 estimatedCost += player.customBudget;
+                totalCustomBudget += player.customBudget; // Aggiungi al totale dei budget personalizzati
             }
             if (player.actualSpent !== null && !isNaN(player.actualSpent)) {
                 totalActualSpent += player.actualSpent;
@@ -656,7 +658,8 @@ document.addEventListener('DOMContentLoaded', () => {
             totalSpentValueSpan.textContent = totalActualSpent;
         }
 
-        const businessPlan = currentFantamilioni - totalActualSpent;
+        // MODIFICA: Il business plan ora si basa sui budget personalizzati invece che sulla spesa effettiva
+        const businessPlan = currentFantamilioni - totalCustomBudget;
         if (businessPlanValueSpan) {
             businessPlanValueSpan.textContent = businessPlan;
             businessPlanValueSpan.classList.remove('positive', 'negative');
@@ -703,6 +706,52 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // NUOVA FUNZIONE: Calcola il consiglio AI migliorato
+    function calculateAIAdvice(player, selectedYear) {
+        const playerRole = player[`R_${selectedYear}`];
+        if (!playerRole || !currentRosterSetting[playerRole]) {
+            return 0;
+        }
+
+        // Budget totale disponibile per il ruolo
+        const totalBudgetForRole = currentFantamilioni * currentRosterSetting[playerRole];
+        
+        // Calcola quanto già speso per questo ruolo (escluso il giocatore corrente)
+        let spentForRole = 0;
+        selectedPlayers.forEach(p => {
+            if (p[`R_${selectedYear}`] === playerRole && p.Id !== player.Id) {
+                spentForRole += p.customBudget || 0;
+            }
+        });
+
+        // Budget rimanente per il ruolo
+        const remainingBudgetForRole = Math.max(0, totalBudgetForRole - spentForRole);
+
+        // Ottieni la quotazione iniziale del giocatore
+        const qtKey = (currentGameMode === 'classic') ? `Qt.A_${selectedYear}` : `Qt.A M_${selectedYear}`;
+        const initialQuotation = player[qtKey] || 1;
+
+        // Calcola il peso basato sulla quotazione (giocatori con quotazione più alta ottengono budget maggiore)
+        // Normalizziamo la quotazione tra 0.5 e 2.0 per evitare valori estremi
+        const quotationWeight = Math.min(2.0, Math.max(0.5, initialQuotation / 10));
+
+        // Calcola quanti giocatori mancano per completare il ruolo (assumendo 25 giocatori totali)
+        const playersInRole = Array.from(selectedPlayers.values()).filter(p => p[`R_${selectedYear}`] === playerRole).length;
+        const expectedPlayersForRole = Math.round(25 * currentRosterSetting[playerRole]);
+        const remainingPlayersForRole = Math.max(1, expectedPlayersForRole - playersInRole + 1); // +1 include il giocatore corrente
+
+        // Budget base per giocatore nel ruolo
+        const baseBudgetPerPlayer = remainingBudgetForRole / remainingPlayersForRole;
+
+        // Applica il peso della quotazione
+        const adjustedBudget = baseBudgetPerPlayer * quotationWeight;
+
+        // Assicurati che non superi il budget rimanente per il ruolo
+        const finalBudget = Math.min(adjustedBudget, remainingBudgetForRole);
+
+        return Math.max(1, Math.round(finalBudget)); // Minimo 1 fantamilione
+    }
+
     function updateObjectivesTable() {
         if (!objectivesTableBody) return;
         
@@ -728,6 +777,18 @@ document.addEventListener('DOMContentLoaded', () => {
         playersForObjectivesTable.forEach(player => {
             const row = objectivesTableBody.insertRow();
             row.dataset.playerId = player.Id;
+
+            // MODIFICA: Colonna Azione come prima colonna senza titolo
+            const actionCell = row.insertCell();
+            const removeBtn = document.createElement('button');
+            removeBtn.innerHTML = '<i class="fas fa-minus"></i>';
+            removeBtn.classList.add('remove-player-btn-round'); // Nuova classe per il pulsante rotondo
+            removeBtn.title = 'Rimuovi dagli obiettivi';
+            removeBtn.addEventListener('click', (event) => {
+                event.stopPropagation();
+                togglePlayerSelection(player.Id, player);
+            });
+            actionCell.appendChild(removeBtn);
 
             row.insertCell().textContent = player.Nome;
             row.insertCell().textContent = player[`R_${selectedYear}`] || 'N.D.';
@@ -782,28 +843,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             });
 
-            // Colonna Consiglio AI
+            // MODIFICA: Colonna Consiglio AI con nuovo calcolo
             const aiAdviceCell = row.insertCell();
-            const playerRole = player[`R_${selectedYear}`];
-            if (playerRole && currentRosterSetting[playerRole]) {
-                const totalBudgetForRole = currentFantamilioni * currentRosterSetting[playerRole];
-                let spentForRole = 0;
-                selectedPlayers.forEach(p => {
-                    if (p[`R_${selectedYear}`] === playerRole && p.Id !== player.Id) {
-                        spentForRole += p.actualSpent || 0;
-                    }
-                });
-
-                const remainingBudgetForRole = totalBudgetForRole - spentForRole;
-                const adviceBudget = Math.max(0, Math.min(player.customBudget || 0, remainingBudgetForRole));
-
-                aiAdviceCell.innerHTML = `<i class="fas fa-star" title="Basato su quotazione iniziale e budget per ruolo"></i> ${adviceBudget.toFixed(0)}`;
-                aiAdviceCell.style.fontWeight = 'bold';
-                aiAdviceCell.style.color = '#27ae60';
-            } else {
-                aiAdviceCell.textContent = 'N.D.';
-                aiAdviceCell.classList.add('not-available');
-            }
+            const aiAdvice = calculateAIAdvice(player, selectedYear);
+            
+            aiAdviceCell.innerHTML = `<i class="fas fa-star" title="Consiglio basato su budget disponibile, quotazione iniziale e allocazione ruolo"></i> ${aiAdvice}`;
+            aiAdviceCell.style.fontWeight = 'bold';
+            aiAdviceCell.style.color = '#27ae60';
 
             // Colonna Spesa
             const spentCell = row.insertCell();
@@ -898,16 +944,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 cell.setAttribute('title', `${titleText} (Rif. ${displayYear.replace('_', '/')})`);
             });
-
-            const actionCell = row.insertCell();
-            const removeBtn = document.createElement('button');
-            removeBtn.innerHTML = '<i class="fas fa-minus"></i>';
-            removeBtn.classList.add('remove-player-btn-mini');
-            removeBtn.addEventListener('click', (event) => {
-                event.stopPropagation();
-                togglePlayerSelection(player.Id, player);
-            });
-            actionCell.appendChild(removeBtn);
         });
 
         updateObjectivesTableHeader(selectedYear);
@@ -979,29 +1015,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 valA = auValueA;
                 valB = auValueB;
             } else if (columnName === 'Consiglio AI') {
-                const playerRoleA = a[`R_${selectedYear}`];
-                const playerRoleB = b[`R_${selectedYear}`];
-                const totalBudgetForRoleA = currentFantamilioni * (currentRosterSetting[playerRoleA] || 0);
-                const totalBudgetForRoleB = currentFantamilioni * (currentRosterSetting[playerRoleB] || 0);
-
-                let spentForRoleA = 0;
-                selectedPlayers.forEach(p => {
-                    if (p[`R_${selectedYear}`] === playerRoleA && p.Id !== a.Id) {
-                        spentForRoleA += p.actualSpent || 0;
-                    }
-                });
-                let spentForRoleB = 0;
-                selectedPlayers.forEach(p => {
-                    if (p[`R_${selectedYear}`] === playerRoleB && p.Id !== b.Id) {
-                        spentForRoleB += p.actualSpent || 0;
-                    }
-                });
-
-                const remainingBudgetForRoleA = totalBudgetForRoleA - spentForRoleA;
-                const remainingBudgetForRoleB = totalBudgetForRoleB - spentForRoleB;
-
-                valA = Math.max(0, Math.min(a.customBudget || 0, remainingBudgetForRoleA));
-                valB = Math.max(0, Math.min(b.customBudget || 0, remainingBudgetForRoleB));
+                valA = calculateAIAdvice(a, selectedYear);
+                valB = calculateAIAdvice(b, selectedYear);
             }
 
             if (valA === null && valB === null) return 0;
@@ -1027,7 +1042,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateObjectivesTableHeader(year) {
         if (!objectivesTableHeaderRow) return;
         
+        // MODIFICA: Intestazione senza titolo per la colonna azione (prima colonna)
         objectivesTableHeaderRow.innerHTML = `
+            <th class="action-column"></th>
             <th data-column-name="Nome">Nome</th>
             <th data-column-name="Ruolo">Ruolo</th>
             <th data-column-name="Squadra">Squadra</th>
@@ -1065,12 +1082,9 @@ document.addEventListener('DOMContentLoaded', () => {
             objectivesTableHeaderRow.appendChild(th);
         });
 
-        const actionTh = document.createElement('th');
-        actionTh.textContent = 'Azione';
-        objectivesTableHeaderRow.appendChild(actionTh);
-
         objectivesTableHeaderRow.querySelectorAll('th').forEach(th => {
-            if (th.textContent !== 'Azione') {
+            // Non rendere cliccabile la colonna azione (senza data-column-name)
+            if (th.dataset.columnName) {
                 th.addEventListener('click', () => {
                     const columnName = th.dataset.columnName;
                     const newDirection = (currentObjectivesTableSortColumn === columnName && currentObjectivesTableSortDirection === 'asc') ? 'desc' : 'asc';

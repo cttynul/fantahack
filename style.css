@@ -585,6 +585,32 @@ h1 {
     transform: scale(0.95);
 }
 
+.remove-player-btn-round {
+    background-color: #e74c3c;
+    color: var(--white);
+    border: none;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.remove-player-btn-round:hover {
+    background-color: #c0392b;
+    transform: scale(1.1);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+.remove-player-btn-round:active {
+    transform: scale(0.95);
+}
+
 .loading-message {
     text-align: center;
     padding: 20px;
