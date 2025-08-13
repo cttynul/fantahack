@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const databaseFile = './Database.csv';
+    const databaseFile = 'Database.csv';
     let allPlayersData = [];
     let currentFilteredData = [];
     let selectedPlayers = new Map(); // Map<playerId, playerObject>
@@ -315,9 +315,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (fmValue === null || isNaN(fmValue)) {
             return '';
         }
-        if (fmValue >= 6.5) {
+        if (fmValue >= 5.9) {
             return 'fm-green';
-        } else if (fmValue >= 5.7 && fmValue < 6.5) {
+        } else if (fmValue >= 5.7 && fmValue < 5.9) {
             return 'fm-yellow';
         } else {
             return 'fm-red';
@@ -1468,7 +1468,148 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    
+    const saveRosterBtn = document.getElementById('save-roster-btn');
+    const loadRosterBtn = document.getElementById('load-roster-btn');
+    const loadRosterInput = document.getElementById('load-roster-input');
 
+    function saveRoster() {
+        if (selectedPlayers.size === 0) {
+            alert('Nessun giocatore selezionato da salvare!');
+            return;
+        }
 
+        const rosterData = {
+            version: '1.0',
+            timestamp: new Date().toISOString(),
+            gameMode: currentGameMode,
+            fantamilioni: currentFantamilioni,
+            rosterSetting: rosterSettingSelect.value,
+            players: Array.from(selectedPlayers.values()).map(player => ({
+                id: player.Id,
+                customBudget: player.customBudget,
+                actualSpent: player.actualSpent
+            }))
+        };
+
+        const blob = new Blob([JSON.stringify(rosterData, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'fantahackalcio.fhdb';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+    }
+
+    async function loadRoster(file) {
+        try {
+            const content = await file.text();
+            let rosterData;
+
+            try {
+                rosterData = JSON.parse(content);
+            } catch (e) {
+                throw new Error('File non valido. Il formato deve essere JSON.');
+            }
+
+            // Validate file structure
+            if (!rosterData.version || !rosterData.players || !Array.isArray(rosterData.players)) {
+                throw new Error('Struttura del file non valida.');
+            }
+
+            // Clear current selection
+            selectedPlayers.clear();
+
+            // Set game mode
+            if (rosterData.gameMode && (rosterData.gameMode === 'classic' || rosterData.gameMode === 'mantra')) {
+                currentGameMode = rosterData.gameMode;
+                if (gameModeSwitchToggle) {
+                    gameModeSwitchToggle.dataset.mode = rosterData.gameMode;
+                    gameModeSwitchToggle.querySelectorAll('.switch-option').forEach(opt => {
+                        opt.classList.toggle('active', opt.dataset.mode === rosterData.gameMode);
+                    });
+                }
+            }
+
+            // Set fantamilioni
+            if (rosterData.fantamilioni && !isNaN(rosterData.fantamilioni)) {
+                currentFantamilioni = rosterData.fantamilioni;
+                if (fantamilioniInput) {
+                    fantamilioniInput.value = currentFantamilioni;
+                }
+                if (fantamilioniInputDisplay) {
+                    fantamilioniInputDisplay.textContent = currentFantamilioni;
+                }
+            }
+
+            // Set roster setting
+            if (rosterData.rosterSetting && ROSTER_SETTINGS[rosterData.rosterSetting]) {
+                if (rosterSettingSelect) {
+                    rosterSettingSelect.value = rosterData.rosterSetting;
+                }
+                currentRosterSetting = ROSTER_SETTINGS[rosterData.rosterSetting];
+            }
+
+            // Load players
+            let loadedCount = 0;
+            let errorCount = 0;
+
+            rosterData.players.forEach(savedPlayer => {
+                const player = allPlayersData.find(p => p.Id === savedPlayer.id);
+                if (player) {
+                    player.customBudget = savedPlayer.customBudget;
+                    player.actualSpent = savedPlayer.actualSpent;
+                    selectedPlayers.set(player.Id, player);
+                    loadedCount++;
+                } else {
+                    errorCount++;
+                }
+            });
+
+            // Update UI
+            applyFilters();
+            updateObjectivesTable();
+            updateAuctionSummary();
+
+            // Show result
+            const message = `Caricamento completato:\n${loadedCount} giocatori caricati`;
+            if (errorCount > 0) {
+                alert(message + `\n${errorCount} giocatori non trovati nel database attuale.`);
+            } else {
+                alert(message);
+            }
+
+        } catch (error) {
+            console.error('Errore nel caricamento del file:', error);
+            alert(`Errore nel caricamento del file: ${error.message}`);
+        }
+    }
+
+    // Add event listeners
+    if (saveRosterBtn) {
+        saveRosterBtn.addEventListener('click', saveRoster);
+    }
+
+    if (loadRosterBtn) {
+        loadRosterBtn.addEventListener('click', () => {
+            loadRosterInput.click();
+        });
+    }
+
+    if (loadRosterInput) {
+        loadRosterInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            if (!file.name.endsWith('.fhdb')) {
+                alert('Per favore, seleziona un file .fhdb valido');
+                e.target.value = '';
+                return;
+            }
+
+            loadRoster(file);
+            e.target.value = ''; // Reset input
+        });
+    }
 }); // Closing the main function scope
