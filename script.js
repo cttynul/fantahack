@@ -1293,6 +1293,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    function showCookieBanner() {
+        if (!cookieBanner) {
+            cookieBanner.style.display = 'block';
+        }
+    }
+
     function setCookie(name, value, days) {
         let expires = "";
         if (days) {

@@ -15,10 +15,49 @@
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
-    padding: 20px;
-    background-color: var(--light-bg);
+    padding: 0; /* Rimosso il padding per permettere alla navbar di estendersi */
+    background-color: var(--white); /* Sfondo bianco come da richiesta */
     color: var(--dark-text);
     line-height: 1.6;
+}
+
+/* Stile per la navbar in stile Bootstrap */
+.main-nav {
+    background-color: var(--white); /* Sfondo bianco */
+    padding: 1rem 1.5rem; /* Padding interno */
+    /* Ombra sotto, come in Bootstrap */
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    /* width: 100%; Assicura che la navbar prenda tutta la larghezza */
+}
+
+.nav-links {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap; /* Aggiunto per permettere ai link di andare a capo */
+    justify-content: center; /* Centra i link all'interno del contenitore */
+}
+
+.nav-item {
+    color: var(--dark-text); /* Testo scuro per contrasto su sfondo bianco */
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.1em;
+    padding: 8px 12px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.nav-item:hover {
+    background-color: #f0f0f0; /* Grigio chiaro al passaggio del mouse */
+    color: var(--primary-color); /* Rende il testo verde all'hover */
+}
+
+.nav-item i {
+    margin-right: 8px;
 }
 
 .container {
@@ -96,6 +135,7 @@ h1 {
 .filter-actions {
     display: flex;
     gap: 10px;
+    align-items: center;
 }
 
 .filters button {
@@ -795,31 +835,170 @@ h1 {
 
 /* Stili per la colorazione della FantaMedia */
 .fm-green {
-    background-color: #e6ffe6; /* Verde chiaro */
-    color: #1a7e28; /* Testo verde scuro */
+    background-color: #e6ffe6; /* Verde chiaro per ottimo */
+    color: #1a7e28;
     font-weight: bold;
 }
 
 .fm-yellow {
-    background-color: #fffacd; /* Giallo chiaro */
-    color: #b38800; /* Testo giallo scuro */
+    background-color: #fffacd; /* Giallo chiaro per nella media */
+    color: #b38800;
     font-weight: bold;
 }
 
 .fm-red {
-    background-color: #ffe6e6; /* Rosso chiaro */
-    color: #c0392b; /* Testo rosso scuro */
+    background-color: #ffe6e6; /* Rosso chiaro per sotto la media */
+    color: #c0392b;
     font-weight: bold;
+}
+
+/* Stili specifici per la sezione di Analisi Giocatore */
+.player-analysis-container {
+    padding: 20px;
+    background-color: var(--white); /* Imposta lo sfondo su bianco */
+    border-radius: 10px; /* Aggiungi un piccolo bordo per un look più pulito */
+}
+
+.search-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #f5f5f5; /* Grigio chiaro per la sezione */
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.search-section label {
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.search-section input[type="text"] {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+    transition: border-color 0.3s ease;
+}
+
+.search-section input[type="text"]:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(64, 142, 94, 0.3);
+}
+
+.player-details {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background-color: #f5f5f5; /* Grigio chiaro per la sezione */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.player-info {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: center;
+    gap: 15px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #eee;
+}
+
+.player-info h2 {
+    color: var(--secondary-color);
+    margin: 0;
+    font-size: 1.8em;
+}
+
+.player-info p {
+    margin: 0;
+    font-size: 1.1em;
+    color: var(--dark-text);
+}
+
+/* Stili per la tabella delle statistiche del giocatore */
+#player-stats-table {
+    overflow-x: auto;
+}
+
+#player-stats-table table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+#player-stats-table th,
+#player-stats-table td {
+    padding: 12px 15px;
+    border: 1px solid #e0e0e0;
+    text-align: center;
+    white-space: nowrap;
+}
+
+#player-stats-table thead th {
+    background-color: var(--primary-color);
+    color: var(--white);
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.9em;
+}
+
+#player-stats-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+#player-stats-table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Stili per i grafici */
+.player-charts {
+    display: flex;
+    flex-wrap: wrap; /* Permette il wrap dei contenitori dei grafici */
+    justify-content: center; /* Centra i grafici */
+    gap: 20px;
+    margin-top: 30px;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: var(--white);
+}
+
+.chart-container {
+    width: 100%; /* I grafici occuperanno il 100% della larghezza su schermi piccoli */
+    max-width: 450px; /* Larghezza massima per gli schermi più grandi */
+    height: 300px; /* Imposta un'altezza fissa per una migliore visualizzazione */
+    padding: 15px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    flex: 1 1 30%; /* Modificato per permettere ai grafici di stare su una riga */
+    min-width: 300px; /* Larghezza minima per evitare che diventino troppo piccoli */
+}
+
+.chart-container h3 {
+    text-align: center;
+    color: var(--secondary-color);
+    margin-top: 0;
+    font-size: 1.2em;
+}
+
+.chart-container canvas {
+    height: 250px; /* Altezza specifica per il grafico */
 }
 
 /* --- Footer --- */
 .main-footer {
-    background-color: var(--light-bg); 
-    color: var(--secondary-dark-green); /* Testo bianco */
+    color: var(--secondary-color); /* Testo scuro per un buon contrasto */
     padding: 10px 0;
     text-align: center;
     font-size: 0.9em;
     margin-top: 40px; /* Spazio sopra il footer */
+    margin-bottom: 10px;
 }
 
 .main-footer p {
@@ -842,7 +1021,7 @@ h1 {
 
 .footer-links a {
     margin: 0 10px;
-    border-right: 1px solid rgba(255, 255, 255, 0.3); /* Separatore per i link */
+    border-right: 1px solid rgba(0, 0, 0, 0.3); /* Separatore per i link, scuro su sfondo chiaro */
     padding-right: 10px;
 }
 
@@ -909,12 +1088,6 @@ h1 {
 
 .remove-player-btn-mini:hover {
     background-color: #c0392b;
-}
-
-.filter-actions {
-    display: flex;
-    gap: 10px;
-    align-items: center;
 }
 
 .help-btn {

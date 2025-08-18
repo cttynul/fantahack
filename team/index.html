@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fantahackalcio Manager - Analisi Squadra</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="./team.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="icon" type="image/png" href="../favicon.png">
+</head>
+<body style="background-color: white;">
+    <nav class="main-nav">
+        <div class="nav-links">
+            <a href="../" class="nav-item">
+                <i class="fas fa-home"></i> Home
+            </a>
+            <a href="../player/" class="nav-item">
+                <i class="fas fa-search"></i> Analisi Giocatore
+            </a>
+            <a href="." class="nav-item">
+                <i class="fas fa-users"></i> Analisi Squadra
+            </a>
+        </div>
+    </nav>
+    <div class="container player-analysis-container">
+        <h1><img src="../logo.png" style="width: 250px"><br>Analisi Squadra</h1>
+        <div class="search-section">
+            <label for="team-select">Seleziona Squadra:</label>
+            <select id="team-select" disabled>
+                <option value="">Caricamento...</option>
+            </select>
+        </div>
+
+        <div id="team-details" class="player-details" style="display:none;">
+            <div id="team-summary"></div>
+            <div id="team-players-table" class="table-spoiler">
+                <div class="spoiler-header">
+                    <h2>Riepilogo Giocatori</h2>
+                    <i class="fas fa-chevron-down spoiler-icon"></i>
+                </div>
+                <div class="spoiler-content">
+                    <div class="table-container">
+                        <table id="players-table">
+                            <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>Ruolo</th>
+                                    <th>MV '24/'25</th>
+                                    <th>FM '24/'25</th>
+                                    <th>Gol '24/'25</th>
+                                    <th>Quotazione '24/'25</th>
+                                    <th>Fattore Fantahack</th>
+                                </tr>
+                            </thead>
+                            <tbody id="players-table-body">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="player-charts two-charts-flex">
+                <div class="chart-container">
+                    <h3>Top Player ⭐</h3>
+                    <canvas id="top-player-chart"></canvas>
+                </div>
+                <div id="unicorn-chart-container" class="chart-container">
+                    <h3>Unicorni 🦄</h3>
+                    <canvas id="unicorn-chart"></canvas>
+                </div>
+            </div>
+
+            <div id="set-pieces-goalkeeper-container" class="two-column-layout">
+    <div id="set-pieces-data">
+        </div>
+    <div id="goalkeeper-data">
+        </div>
+</div>
+        </div>
+        <p id="no-team-found" class="info-message active">Nessuna squadra selezionata. Inizia a selezionare sopra.</p>
+    </div>
+    
+    <footer class="main-footer">
+        <p>🄯 2025 Fantahackalcio Manager</p>
+        <p>Ideato, sviluppato e regalato a voi con il 💚 da <a href="https://github.com/cttynul" target="_blank" rel="noopener noreferrer">cttynul</a></p>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="./team.js"></script>
+</body>
+</html>

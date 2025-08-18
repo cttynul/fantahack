@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fantahackalcio Manager - Analisi Giocatore</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="icon" type="image/png" href="../favicon.png">
+</head>
+<body style="background-color: white;">
+    <nav class="main-nav">
+        <div class="nav-links">
+            <a href="../" class="nav-item">
+                <i class="fas fa-home"></i> Home
+            </a>
+            <a href="." class="nav-item">
+                <i class="fas fa-search"></i> Analisi Giocatore
+            </a>
+            <a href="../team/" class="nav-item">
+                <i class="fas fa-users"></i> Analisi Squadra
+            </a>
+        </div>
+    </nav>
+    <div class="container player-analysis-container">
+        <h1><img src="../logo.png" style="width: 250px"><br>
+            Analisi Giocatore</h1>
+        <div class="search-section">
+            <label for="search-player-analysis">Cerca Giocatore:</label>
+            <input type="text" id="search-player-analysis" placeholder="Nome giocatore...">
+        </div>
+        <div id="player-details" class="player-details" style="display:none;">
+            <div id="player-info"></div>
+            <div id="player-stats-table"></div>
+            <div class="player-charts" style="margin-top: 20px;">
+                <div class="chart-container">
+                    <h3>Quotazione per Stagione</h3>
+                    <canvas id="player-quote-chart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>Andamento Gol</h3>
+                    <canvas id="player-goals-chart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>Andamento FantaMedia</h3>
+                    <canvas id="player-fm-chart"></canvas>
+                </div>
+                <br>
+            </div>
+            <div id="additional-data"></div>
+        </div>
+        <p id="no-player-found" class="info-message active">Nessun giocatore selezionato. Inizia a cercare sopra.</p>
+    </div>
+    
+    <footer class="main-footer">
+        <p>🄯 2025 Fantahackalcio Manager</p>
+        <p>Ideato, sviluppato e regalato a voi con il 💚 da <a href="https://github.com/cttynul" target="_blank" rel="noopener noreferrer">cttynul</a></p>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="./player.js"></script>
+</body>
+</html>
