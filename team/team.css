@@ -21,14 +21,6 @@ body {
     line-height: 1.6;
 }
 
-/* Container principale e sezioni */
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-    box-sizing: border-box;
-}
-
 /* Sfondo del container principale in bianco */
 .player-analysis-container {
     background-color: var(--white);
@@ -290,3 +282,10 @@ h1 {
         flex-direction: column;
     }
 }
+
+.highlight-player {
+    background-color: #f0f0f0; /* Colore di sfondo più chiaro */
+    font-weight: bold; /* Testo in grassetto */
+    color: #408e5e; /* Colore del testo leggermente diverso */
+}
+

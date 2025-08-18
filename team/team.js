@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const topPlayerChartContainer = document.getElementById('top-player-chart-container');
     const unicornChartContainer = document.getElementById('unicorn-chart-container');
     const setPiecesDiv = document.getElementById('set-pieces-data');
-    const goalkeeperDiv = document.getElementById('goalkeeper-data');
+    const goalkeeperDiv = document = document.getElementById('goalkeeper-data');
     const flexContainer = document.getElementById('set-pieces-goalkeeper-container');
 
     // Funzione per caricare il database dei giocatori
@@ -133,7 +133,28 @@ document.addEventListener('DOMContentLoaded', () => {
         noTeamFoundMessage.style.display = 'none';
         teamDetailsDiv.style.display = 'block';
 
-        const teamPlayers = allPlayersData.filter(p => p['Squadra_2025_26'] === team);
+        let teamPlayers = allPlayersData.filter(p => p['Squadra_2025_26'] === team);
+        
+        // Ordina i giocatori per ruolo (P, D, C, A)
+        const roleOrder = { 'P': 1, 'D': 2, 'C': 3, 'A': 4 };
+        teamPlayers.sort((a, b) => {
+            const roleA = a['R_2025_26'];
+            const roleB = b['R_2025_26'];
+            return (roleOrder[roleA] || 99) - (roleOrder[roleB] || 99);
+        });
+
+        // Trova i giocatori con i valori più alti per FantaMedia e Fantahack Factor
+        const topFmPlayers = teamPlayers
+            .filter(p => p['Fm_2024_25'] && parseFloat(p['Fm_2024_25']) !== 666)
+            .sort((a, b) => parseFloat(b['Fm_2024_25']) - parseFloat(a['Fm_2024_25']))
+            .slice(0, 3)
+            .map(p => p.Nome);
+
+        const topFantahackPlayers = teamPlayers
+            .filter(p => p['Fattore_Fantahack'] && parseFloat(p['Fattore_Fantahack']) > 0)
+            .sort((a, b) => parseFloat(b['Fattore_Fantahack']) - parseFloat(a['Fattore_Fantahack']))
+            .slice(0, 3)
+            .map(p => p.Nome);
 
         // Riepilogo generale
         const roleCounts = teamPlayers.reduce((acc, p) => {
@@ -156,6 +177,12 @@ document.addEventListener('DOMContentLoaded', () => {
         playersTableBody.innerHTML = '';
         teamPlayers.forEach(player => {
             const row = document.createElement('tr');
+
+            // Aggiungi classe se il giocatore è tra i top
+            if (topFmPlayers.includes(player.Nome) || topFantahackPlayers.includes(player.Nome)) {
+                row.classList.add('highlight-player');
+            }
+
             const mv_24_25 = (parseFloat(player['Mv_2024_25']) === 666) ? '0' : player['Mv_2024_25'] || 'N/D';
             const fm_24_25 = (parseFloat(player['Fm_2024_25']) === 666) ? '0' : player['Fm_2024_25'] || 'N/D';
             const goals_24_25 = (player['R_2025_26'] === 'P' ? (parseFloat(player['Gs_2024_25']) === 666 ? '0' : player['Gs_2024_25'] || 'N/D') : (parseFloat(player['Gf_2024_25']) === 666 ? '0' : player['Gf_2024_25'] || 'N/D'));
