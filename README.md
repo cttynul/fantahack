@@ -12,8 +12,7 @@ E per finire: mi sono disintossicato dal fantacalcio. Questo progetto è la chiu
 
 ---
 
-# [Avvia Fantahackalcio Manager](https://fantahackalcio.netlify.app)
-### [Backup Link](https://cttynul.github.io/fantahackalcio)
+## [Avvia Fantahackalcio Manager Demo](https://cttynul.github.io/fantahackalcio)
 
 ---
 
@@ -34,6 +33,16 @@ Fatto sta che, a fine stagione, dopo aver fatto all-in su uno Zaccagni del Veron
 Ai tempi, mi limitavo a generare dati direttamente dalla **CLI Python**, un'operazione che richiedeva una certa devozione e, ammettiamolo, un amore incondizionato per il terminale. Questo approccio rudimentale, ma efficace, è nato dopo aver messo sul groppone la bellezza di ben **un anno di esperienza** con quella favolosa libreria che è **Pandas**. Sì, un anno intero a domare DataFrames e Series, un'impresa epica che mi ha reso un pioniere nel campo! (Se non si fosse capito qua c'è della gran ironia) Il codice di quelle prime incarnazioni? Lo trovate sempre qui, sepolto tra le pieghe della storia di questo progetto.
 
 Ma, quest'anno, ho deciso di alzare l'asticella. Basta con la fatica di dover lanciare script Python o di configurare chissà quali ambienti di sviluppo! Ho preso la mia creatura, l'ho fatta evolvere, e l'ho resa una dashboard **pronta all'uso**, accessibile a tutti e pensata per guidarvi nell'arte dell'asta in maniera... beh, chiamiamola "**creativa**". Ho integrato i risultati di **strani e arzigogolati algoritmi** scritti in Python con fogli Excel che si autocolorano in maniera quasi magica, creando questo favoloso frontend. E sì, la **UI e i colori di Excel** continuano a essere sempre nel mio cuore, tanto che ho deciso di impostare la visual identity di tutto il frontend su un bel **verde, appunto Excel**. Non aspettatevi la formula della vittoria come, altri software su abbonamento, vi promettono, questo è un mero calcolo statistico sulle performance dei giocatori nelle ultime stagioni del campionato italiano, il _one season wonder_ non puoi prevederlo con i numeri, è inutile.
+
+## Fonti dei Dati
+Il file finale **Database.csv** utilizzando dal frontend si basa su un formato proprietario con dati derivati da Fantacalcio.it. Il recupero di tali dati è interamente demandato all'utente. Il frontend, per funzionare, richiede semplicemente che il file Database.csv sia accessibile tramite un URL (anche locale) e che contenga una struttura compatibile con l'applicazione.
+
+In sintesi, il processo è: 
+
+1) Normalizza i dati usando `dataset_builder.py`
+2) Genera `Database.csv` utilizzando `core.py`
+3) Carica questo file nel tuo frontend per la visualizzazione.
+4) Profit
 
 ## Un saluto speciale e un monito per i "creativi"
 
