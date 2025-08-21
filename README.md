@@ -48,7 +48,7 @@ Ora, non vorrei fare il moralista, ma si sa che nel mondo delle idee (e del codi
 E, per chiudere il cerchio (e il progetto), un'ultima, doverosa precisazione: questo sarà il mio **secondo anno consecutivo** in cui non cadrò nella tentazione di bruciarmi un'intera giornata estiva dietro l'asta del Fantacalcio. La gioia di poter vivere i fine settimana senza l'ansia di controllare l'app di Fantagazzetta? Non ha prezzo, credetemi, non ne vale la pena. 
 Vedete questo progetto non solo come uno strumento, ma come **un regalo** a tutta la community dei fantallenatori la **chiusura di un cerchio**, la fine gloriosa di un progettino la cui idea è nata nella noia di un pomeriggio di agosto in cui il lavoro forse non era così tanto, e sul cui sviluppo ci siamo buttati a capofitto la sera stessa. È stato un bel viaggio, ma è ora di appendere _l'Excel del Fantacalcio al chiodo_... 
 
-Ah, quasi dimenticavo, intercetto la domanda "nella descrizione del repo e anche nel frontend c'è un riferimento all'AI, non ci spieghi nulla?" Semplice, non c'è. Solo marketing, tanto chi vuoi che sia arrivato a leggere fin qua. In realtà importare le API di un qualsiasi LLM è _costless_, ma suvvia, evitiamo di uccidere una mosca con un bazooka. 
+Ah, quasi dimenticavo, intercetto la domanda "nella descrizione del repo e anche nel frontend c'è un riferimento all'AI, non ci spieghi nulla?" Un Random Forest, punto. Solo marketing, tanto chi vuoi che sia arrivato a leggere fin qua. In realtà importare le API di un qualsiasi LLM è _costless_, ma suvvia, evitiamo di uccidere una mosca con un bazooka. 
 
 Buona asta a tutti!
 
