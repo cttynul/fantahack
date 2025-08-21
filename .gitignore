@@ -2,6 +2,7 @@
 *.fhcsv
 *.xlsx
 *.xls
+Database-Real.csv
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
