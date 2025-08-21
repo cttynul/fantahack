@@ -151,8 +151,8 @@ document.addEventListener('DOMContentLoaded', () => {
             .map(p => p.Nome);
 
         const topFantahackPlayers = teamPlayers
-            .filter(p => p['Fattore_Fantahack'] && parseFloat(p['Fattore_Fantahack']) > 0)
-            .sort((a, b) => parseFloat(b['Fattore_Fantahack']) - parseFloat(a['Fattore_Fantahack']))
+            .filter(p => p['Fattore_Fantahack_AI'] && parseFloat(p['Fattore_Fantahack_AI']) > 0)
+            .sort((a, b) => parseFloat(b['Fattore_Fantahack_AI']) - parseFloat(a['Fattore_Fantahack_AI']))
             .slice(0, 3)
             .map(p => p.Nome);
 
@@ -187,7 +187,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const fm_24_25 = (parseFloat(player['Fm_2024_25']) === 666) ? '0' : player['Fm_2024_25'] || 'N/D';
             const goals_24_25 = (player['R_2025_26'] === 'P' ? (parseFloat(player['Gs_2024_25']) === 666 ? '0' : player['Gs_2024_25'] || 'N/D') : (parseFloat(player['Gf_2024_25']) === 666 ? '0' : player['Gf_2024_25'] || 'N/D'));
             const quote_24_25 = (parseFloat(player['Qt.A_2024_25']) === 666) ? '0' : player['Qt.A_2024_25'] || 'N/D';
-            const fantahackFactor = parseFloat(player['Fattore_Fantahack']) * 100;
+            const fantahackFactor = parseFloat(player['Fattore_Fantahack_AI']) * 100;
             const fantahackDisplay = isNaN(fantahackFactor) ? 'N/D' : `${fantahackFactor.toFixed(2)}%`;
 
             row.innerHTML = `
@@ -242,14 +242,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Grafico Unicorni (Fattore Fantahack)
         const topUnicorns = teamPlayers
-            .filter(p => p['Unicorno'] === '1' && parseFloat(p['Fattore_Fantahack']) > 0)
-            .sort((a, b) => parseFloat(b['Fattore_Fantahack']) - parseFloat(a['Fattore_Fantahack']))
+            .filter(p => p['Unicorno_AI'] === '1' && parseFloat(p['Fattore_Fantahack_AI']) > 0)
+            .sort((a, b) => parseFloat(b['Fattore_Fantahack_AI']) - parseFloat(a['Fattore_Fantahack_AI']))
             .slice(0, 5);
 
         if (topUnicorns.length > 0) {
             unicornChartContainer.style.display = 'block';
             const unicornLabels = topUnicorns.map(p => p.Nome);
-            const unicornData = topUnicorns.map(p => parseFloat(p['Fattore_Fantahack']));
+            const unicornData = topUnicorns.map(p => parseFloat(p['Fattore_Fantahack_AI']));
             createChart('unicorn-chart', 'bar', 'Fattore Fantahack', unicornData, unicornLabels);
         } else {
             unicornChartContainer.style.display = 'none';

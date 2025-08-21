@@ -41,9 +41,9 @@ document.addEventListener('DOMContentLoaded', () => {
         playerDetailsDiv.style.display = 'block';
 
         // Calcola il fattore fantahack e prepara le icone
-        const fantahackFactor = parseFloat(player['Fattore_Fantahack']) * 100;
-        const unicornoIcon = player['Unicorno'] == '1' ? ' <span class="unicorn-emoji" title="Unicorno">🦄</span>' : '';
-        const topPlayerIcon = player['Top_Player'] == '1' ? ' <span class="top-player-emoji" title="Top Player">⭐</span>' : '';
+        const fantahackFactor = parseFloat(player['Fattore_Fantahack_AI']) * 100;
+        const unicornoIcon = player['Unicorno_AI'] == '1' ? ' <span class="unicorn-emoji" title="Unicorno">🦄</span>' : '';
+        const topPlayerIcon = player['Top_Player_AI'] == '1' ? ' <span class="top-player-emoji" title="Top Player">⭐</span>' : '';
         const fantahackDisplay = isNaN(fantahackFactor) ? 'N/D' : `${fantahackFactor.toFixed(2)}%`;
 
         // Mostra le informazioni base e il fattore Fantahack

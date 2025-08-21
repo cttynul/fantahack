@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const databaseFile = 'Database.csv';
+    const databaseFile = '../Database.csv';
     let allPlayersData = [];
     let currentFilteredData = [];
     let selectedPlayers = new Map(); // Map<playerId, playerObject>
@@ -231,9 +231,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 player.Unicorno = parseInt(player.Unicorno) === 1;
                 player.Top_Player = parseInt(player.Top_Player) === 1;
                 player.Fattore_Fantahack = parseFloat(player.Fattore_Fantahack) || 0;
-                player.Unicorno_AI = parseInt(player.Unicorno_AI) === 1;
-                player.Top_Player_AI = parseInt(player.Top_Player_AI) === 1;
-                player.Fattore_Fantahack_AI = parseFloat(player.Fattore_Fantahack_AI) || 0;
             });
 
             // Popola il selettore squadre dopo aver caricato i dati
@@ -382,9 +379,9 @@ document.addEventListener('DOMContentLoaded', () => {
         headerHtml += `<th data-column-name="${currentGameMode === 'classic' ? `Qt.A_${year}` : `Qt.A M_${year}`}">Budget</th>`;
 
         headerHtml += `
-            <th data-column-name="Fattore_Fantahack_AI">Fattore Fantahack <i class="fas fa-magic" title="Indica i migliori acquisti qualità/prezzo"></i></th>
-            <th data-column-name="Unicorno_AI">Unicorno <i class="fas fa-horse-head" title="Giocatori low-cost con performance eccellenti"></i></th>
-            <th data-column-name="Top_Player_AI">Top Player <i class="fas fa-crown" title="Giocatore con alta quotazione e alta performance"></i></th>
+            <th data-column-name="Fattore_Fantahack">Fattore Fantahack <i class="fas fa-magic" title="Indica i migliori acquisti qualità/prezzo"></i></th>
+            <th data-column-name="Unicorno">Unicorno <i class="fas fa-horse-head" title="Giocatori low-cost con performance eccellenti"></i></th>
+            <th data-column-name="Top_Player">Top Player <i class="fas fa-crown" title="Giocatore con alta quotazione e alta performance"></i></th>
         `;
         tableHeaderRow.innerHTML = headerHtml;
 
@@ -520,20 +517,9 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             columnsToDisplay.push(
-                { 
-                    key: 'Fattore_Fantahack_AI', 
-                    format: val => val !== 0 ? (val * 100).toFixed(1) + '%' : 'N.D.', 
-                    classIfNull: 'not-available', 
-                    classIfValue: 'fantahack-value' 
-                },
-                { 
-                    key: 'Unicorno_AI', 
-                    format: val => val ? '<span class="unicorn-emoji" title="Unicorno! Basso costo, alta performance!">🦄</span>' : '<span class="not-unicorn-emoji" title="Non un unicorno 😢">☁️</span>' 
-                },
-                { 
-                    key: 'Top_Player_AI', 
-                    format: val => val ? '<span class="top-player-emoji" title="Top Player! Alta quotazione, alta performance!">🌟</span>' : '<span class="not-top-player-emoji" title="Non un Top Player">⚪</span>' 
-                }
+                { key: 'Fattore_Fantahack', format: val => val !== 0 ? (val * 100).toFixed(1) + '%' : 'N.D.', classIfNull: 'not-available', classIfValue: 'fantahack-value' },
+                { key: 'Unicorno', format: val => val ? '<span class="unicorn-emoji" title="Unicorno! Basso costo, alta performance!">🦄</span>' : '<span class="not-unicorn-emoji" title="Non un unicorno 😢">☁️</span>' },
+                { key: 'Top_Player', format: val => val ? '<span class="top-player-emoji" title="Top Player! Alta quotazione, alta performance!">🌟</span>' : '<span class="not-top-player-emoji" title="Non un Top Player">⚪</span>' }
             );
 
             columnsToDisplay.forEach(colDef => {
@@ -1418,7 +1404,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Help Modal functionality
     document.getElementById('readme-btn').onclick = (e) => {
         e.preventDefault();
-        fetch('README.md')
+        fetch('../README.md')
             .then(response => response.text())
             .then(text => {
                 const converter = new showdown.Converter();
@@ -1434,7 +1420,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Download functionality
     document.getElementById('download-db').addEventListener('click', () => {
         const link = document.createElement('a');
-        link.href = 'Database.csv';
+        link.href = '../Database.csv';
         link.download = 'Database_FantaHack.csv';
         document.body.appendChild(link);
         link.click();

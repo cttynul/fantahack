@@ -61,49 +61,34 @@
 
 ## Come Vengono Calcolati gli Indicatori Statistici
 
-Qui di seguito viene illustrato come vengono derivati gli indicatori **Fattore FantaHack**, **Unicorno** e **Top Player**, se proprio siete curiosi come i matti (anche troppo).
+Qui di seguito viene illustrato come vengono derivati gli indicatori **Fattore FantaHack**, **Unicorno** e **Top Player** nella modalità `AI`. A differenza del passato, il calcolo non si basa più su soglie fisse, ma sfrutta un modello di **apprendimento automatico** per analizzare le prestazioni dei giocatori.
 
-### 1. Calcolo del Fattore FantaHack
+### 1. Il Modello Random Forest
 
-Il **Fattore FantaHack** è una metrica proprietaria chiave. Ecco come viene derivato:
+Il cuore del sistema è un modello di **Random Forest Classifier**, un tipo di algoritmo di machine learning. Questo modello viene addestrato su dati storici dei giocatori per imparare a riconoscere le caratteristiche che definiscono un "Top Player". Analizza una serie di statistiche come FantaMedia, Partite Giocate, Goal, Assist e altre metriche di rendimento per stabilire dei modelli predittivi.
 
-* **Punteggio Performance Ponderato ($PpP$)**:
-    * Per ogni giocatore, viene calcolato un punteggio di performance per ogni stagione utilizzando `Fm` (FantaMedia) e `Pv` (Partite Giocate).
-    * La formula utilizzata è:
-        $$Fm \times \frac{Pv}{38}$$
-        dove 38 è il numero di `Max Partite Stagione`.
-    * Questi punteggi di performance stagionali vengono poi ponderati dai `pesi per anno` (ad esempio, 2025-26 ha un peso di 1.0, 2024-25 ha 1.2, 2023-24 ha 0.6 e 2022 -3 ha 0.2).
-    * La somma di questi punteggi di performance ponderati fornisce il `Punteggio Performance Ponderato`. I valori `Fm` o `Pv` mancanti vengono trattati come `NaN` ed esclusi da questo calcolo.
-* **Punteggio Performance Ponderato Normalizzato ($PppN$)**:
-    * Questo punteggio si ottiene dividendo il `Punteggio Performance Ponderato` per il `Punteggio Performance Ponderato` massimo tra tutti i giocatori, normalizzandolo in un intervallo tra 0 e 1.
-* **Fattore FantaHack Finale ($Fattore Fantahack$)**:
-    * Questo è calcolato dividendo il `Punteggio Performance Ponderato Normalizzato` per il logaritmo naturale della quotazione della stagione corrente (`Qt.A_2025-26`) più uno.
-    * La formula è:
-        $$\frac{PppN}{\log(QtA + 1)}$$
-    * I giocatori con quotazioni attuali non valide o pari a zero avranno un `Fattore FantaHack` di 0.
+### 2. Calcolo di Top Player AI
 
-### 2. Calcolo dei Top Player
+Il modello addestrato valuta ogni giocatore e gli assegna una **probabilità** di essere un "Top Player". Questo punteggio, chiamato `Probabilità_Top_Player`, è la base per tutti gli indicatori AI.
 
-Per identificare i **Top Player**, vengono calcolate due medie ponderate:
+* **Assegnazione Top Player AI**: Un giocatore viene classificato come **Top Player AI** (`Top_Player_AI = 1`) se la sua `Probabilità_Top_Player` è **superiore a 0.5**. In caso contrario, viene assegnato un valore di 0.
 
-* **Media Fantamedia Ponderata ($MFmP$)**:
-    * Questa è la media di `Fm` attraverso le stagioni specificate, ponderata dai `pesi per anno`.
-* **Media Partite Giocate Ponderata ($Media Partite Giocate Ponderata$)**:
-    * Questa è la media di `Pv` attraverso le stagioni specificate, ponderata dai `pesi per anno`.
-* **Assegnazione Top Player**:
-    * Un giocatore è classificato come **Top Player** (assegnato un valore di 1) se la sua `Media Fantamedia Ponderata` e la sua `Media Partite Giocate Ponderata` sono entrambe al di sopra del 75° percentile di tutti i valori validi dei giocatori per queste metriche.
-    * Le soglie predefinite sono **6.5** per la FantaMedia e **20** per le partite giocate, se i dati sono insufficienti per calcolare i percentili.
+### 3. Calcolo di Fattore FantaHack AI
 
-### 3. Calcolo degli Unicorni
+Il **Fattore FantaHack AI** è una metrica che combina la performance storica del giocatore con la sua probabilità di essere un Top Player, calcolata dal modello.
 
-Gli **Unicorni** sono giocatori con alto potenziale a basso costo:
+* **Calcolo**: Il valore del `Fattore FantaHack` viene moltiplicato per la `Probabilità_Top_Player` del giocatore. Questo significa che un giocatore con un'alta probabilità di essere un Top Player vedrà il suo Fattore FantaHack originale amplificato.
 
-* **Assegnazione Unicorno**:
-    * Un giocatore è classificato come **Unicorno** (assegnato un valore di 1) se:
-        * La sua quotazione della stagione corrente (`Quotazione_2025_26`) è inferiore o uguale al 50° percentile di tutte le quotazioni valide dei giocatori. Viene utilizzata una soglia predefinita di **10** se non sono disponibili quotazioni valide.
-        * Il suo `Fattore FantaHack` è maggiore o uguale al 75° percentile di tutti i valori validi del `Fattore FantaHack`. Viene utilizzata una soglia predefinita di **0.1** se non sono disponibili fattori validi.
+$$Fattore\ FantaHack\ AI = Fattore\ FantaHack \times Probabilit\grave{a}\Top\Player$$
 
-Questi calcoli combinano la performance storica con il valore di mercato attuale per fornire intuizioni utili per la tua asta del Fantacalcio.
+### 4. Calcolo di Unicorno AI
+
+Gli **Unicorni AI** sono giocatori con un'alta convenienza e un grande potenziale, identificati dalla combinazione di due criteri:
+
+* **Prezzo Basso**: La quotazione attuale del giocatore (`Qt.A_2025_26`) deve essere **inferiore o uguale al 50° percentile** di tutte le quotazioni valide. In pratica, è un giocatore che costa poco.
+* **Top Player AI**: Il giocatore deve essere stato classificato come **Top Player AI** (`Top_Player_AI = 1`) dal modello.
+
+Un giocatore che soddisfa entrambi questi criteri viene classificato come **Unicorno AI** (`Unicorno_AI = 1`)."
 
 ---
 
