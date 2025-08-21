@@ -1,3 +1,184 @@
+const CSV_CACHE_KEY = 'fantahack_csv_data';
+const CSV_CACHE_TIMESTAMP = 'fantahack_csv_timestamp';
+const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 ore in millisecondi
+
+function createFileInput() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.csv';
+    input.style.display = 'none';
+    input.id = 'csv-file-input';
+    document.body.appendChild(input);
+    return input;
+}
+
+function showInitialLoader() {
+    const loader = document.createElement('div');
+    loader.className = 'initial-loader';
+    loader.innerHTML = `
+        <div class="loader-content">
+            <h2>Benvenuto in Fantahackalcio Manager</h2>
+            <p>Per iniziare, seleziona il file Database.csv</p>
+            <p>Per ulteriori informazioni consulta la <a href="https://github.com/cttynul/fantahackalcio">documentazione ufficiale</a></p>
+            <button id="select-csv-btn" class="primary-btn">
+                <i class="fas fa-file-csv"></i> Seleziona Database
+            </button>
+            <div class="loading-spinner" style="display: none;"></div>
+            <p class="error-message" style="display: none; color: #e74c3c;"></p>
+        </div>
+    `;
+    document.body.appendChild(loader);
+    return loader;
+}
+
+// Modifica la funzione loadCSV esistente
+async function loadCSV(file = null) {
+    return new Promise((resolve, reject) => {
+        // Check cache first
+        const cachedData = localStorage.getItem(CSV_CACHE_KEY);
+        const cachedTimestamp = localStorage.getItem(CSV_CACHE_TIMESTAMP);
+        
+        if (cachedData && cachedTimestamp) {
+            const age = Date.now() - parseInt(cachedTimestamp);
+            if (age < CACHE_DURATION) {
+                console.log('Usando dati dalla cache');
+                resolve(JSON.parse(cachedData));
+                return;
+            }
+        }
+
+        // Required base headers (without year-specific parts)
+        const requiredBaseHeaders = [
+            'Id', 'Nome', 'Fattore_Fantahack', 'Media_Fantamedia_Ponderata',
+            'Media_Partite_Giocate_Ponderata', 'Top_Player', 'Unicorno',
+            'Probabilità_Top_Player', 'Top_Player_AI', 'Fattore_Fantahack_AI',
+            'Unicorno_AI', 'Squadra_AI'
+        ];
+
+        // Required year-specific headers template
+        const yearSpecificHeaders = [
+            'R_YEAR', 'RM_YEAR', 'Squadra_YEAR', 'Qt.A_YEAR', 'Qt.I_YEAR',
+            'Diff._YEAR', 'Qt.A M_YEAR', 'Qt.I M_YEAR', 'Diff.M_YEAR',
+            'FVM_YEAR', 'FVM M_YEAR', 'Rm_YEAR', 'Pv_YEAR', 'Mv_YEAR',
+            'Fm_YEAR', 'Gf_YEAR', 'Gs_YEAR', 'Rp_YEAR', 'Rc_YEAR',
+            'R+_YEAR', 'R-_YEAR', 'Ass_YEAR', 'Amm_YEAR', 'Esp_YEAR', 'Au_YEAR'
+        ];
+
+        const validateHeaders = (headers) => {
+            // Check base headers
+            const missingBaseHeaders = requiredBaseHeaders.filter(h => !headers.includes(h));
+            if (missingBaseHeaders.length > 0) {
+                throw new Error(`Header non validi. Mancano i seguenti campi base: ${missingBaseHeaders.join(', ')}`);
+            }
+
+            // Extract years from headers (looking for R_YYYY_YY pattern)
+            const years = [...new Set(headers
+                .filter(h => h.match(/R_\d{4}_\d{2}/))
+                .map(h => h.match(/\d{4}_\d{2}/)[0]))];
+
+            // For each year found, check all year-specific headers
+            years.forEach(year => {
+                const yearHeaders = yearSpecificHeaders.map(h => h.replace('YEAR', year));
+                const missingYearHeaders = yearHeaders.filter(h => !headers.includes(h));
+                if (missingYearHeaders.length > 0) {
+                    throw new Error(`Header non validi per l'anno ${year}. Mancano i seguenti campi: ${missingYearHeaders.join(', ')}`);
+                }
+            });
+
+            return true;
+        };
+
+        const parseOptions = {
+            header: true,
+            skipEmptyLines: true,
+            complete: function(results) {
+                try {
+                    if (results.errors.length) {
+                        reject(new Error(`Errori nel parsing del CSV: ${results.errors.map(e => e.message).join(', ')}`));
+                        return;
+                    }
+
+                    // Validate headers
+                    const headers = results.meta.fields;
+                    if (!validateHeaders(headers)) {
+                        reject(new Error('Il database non è compatibile. Formato header non valido.'));
+                        return;
+                    }
+
+                    // If validation passes, save to cache and resolve
+                    localStorage.setItem(CSV_CACHE_KEY, JSON.stringify(results.data));
+                    localStorage.setItem(CSV_CACHE_TIMESTAMP, Date.now().toString());
+                    resolve(results.data);
+                } catch (error) {
+                    reject(new Error(`Il database non è compatibile: ${error.message}`));
+                }
+            },
+            error: function(error) {
+                reject(new Error(`Errore nel caricamento del file: ${error.message}`));
+            }
+        };
+
+        if (file) {
+            Papa.parse(file, parseOptions);
+        } else {
+            Papa.parse(databaseFile, { ...parseOptions, download: true });
+        }
+    });
+}
+
+// Modifica l'evento DOMContentLoaded
+document.addEventListener('DOMContentLoaded', async () => {
+    const container = document.querySelector('.container');
+    if (container) container.style.display = 'none';
+
+    const cachedData = localStorage.getItem(CSV_CACHE_KEY);
+    const cachedTimestamp = localStorage.getItem(CSV_CACHE_TIMESTAMP);
+    
+    if (!cachedData || !cachedTimestamp || (Date.now() - parseInt(cachedTimestamp)) >= CACHE_DURATION) {
+        const loader = showInitialLoader();
+        const fileInput = createFileInput();
+        const selectButton = document.getElementById('select-csv-btn');
+        const spinner = loader.querySelector('.loading-spinner');
+        const errorMessage = loader.querySelector('.error-message');
+
+        selectButton.addEventListener('click', () => fileInput.click());
+
+        fileInput.addEventListener('change', async (e) => {
+            if (e.target.files.length === 0) return;
+
+            const file = e.target.files[0];
+            if (file.name !== 'Database.csv') {
+                errorMessage.textContent = 'Per favore, seleziona il file Database.csv';
+                errorMessage.style.display = 'block';
+                return;
+            }
+
+            selectButton.style.display = 'none';
+            spinner.style.display = 'block';
+            errorMessage.style.display = 'none';
+
+            try {
+                allPlayersData = await loadCSV(file);
+                loader.remove();
+                fileInput.remove();
+                container.style.display = 'block';
+                init();
+            } catch (error) {
+                console.error('Errore nel caricamento del CSV:', error);
+                errorMessage.textContent = 'Errore nel caricamento del file. Riprova.';
+                errorMessage.style.display = 'block';
+                selectButton.style.display = 'block';
+                spinner.style.display = 'none';
+            }
+        });
+    } else {
+        // Usa i dati dalla cache
+        allPlayersData = JSON.parse(cachedData);
+        container.style.display = 'block';
+        init();
+    }
+});
+
 document.addEventListener('DOMContentLoaded', () => {
     const databaseFile = 'Database.csv';
     let allPlayersData = [];

@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const databaseFile = '../Database.csv';
     const teamsContainer = document.getElementById('teams-container');
     const loadingOverlay = document.getElementById('loading-overlay');
 
@@ -125,17 +124,39 @@ document.addEventListener('DOMContentLoaded', () => {
         loadingOverlay.style.display = 'none';
     }
 
-    Papa.parse(databaseFile, {
-        download: true,
-        header: true,
-        skipEmptyLines: true,
-        complete: (results) => {
+    async function loadDatabase() {
+        return new Promise((resolve, reject) => {
+            const cachedData = localStorage.getItem('fantahack_csv_data');
+            const cachedTimestamp = localStorage.getItem('fantahack_csv_timestamp');
+            
+            if (cachedData && cachedTimestamp) {
+                const age = Date.now() - parseInt(cachedTimestamp);
+                if (age < 24 * 60 * 60 * 1000) { // 24 ore in millisecondi
+                    console.log('Database caricato dalla cache.');
+                    resolve(JSON.parse(cachedData));
+                    return;
+                }
+            }
+            
+            // Se non ci sono dati in cache validi, reindirizza alla home
+            window.location.href = '/';
+            reject(new Error('Database non trovato. Torna alla home.'));
+        });
+    }
+
+    async function init() {
+        try {
+            const data = await loadDatabase();
             console.log('Database giocatori caricato.');
-            processData(results.data);
-        },
-        error: (error) => {
+            processData(data);
+        } catch (error) {
             console.error('Errore nel caricamento del database:', error);
-            loadingOverlay.innerHTML = `<div class="loading-text" style="color: var(--accent-color);">Errore nel caricamento del file. Assicurati che il file Database.csv sia nella posizione corretta.</div>`;
+            loadingOverlay.innerHTML = `<div class="loading-text" style="color: var(--accent-color);">
+                Errore nel caricamento del file. Torna alla home per caricare il Database.csv.
+            </div>`;
         }
-    });
+    }
+
+    // Avvia l'inizializzazione
+    init();
 });

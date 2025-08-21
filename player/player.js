@@ -17,18 +17,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Funzione per caricare il database
     function loadDatabase() {
-        Papa.parse(databaseFile, {
-            download: true,
-            header: true,
-            skipEmptyLines: true,
-            complete: (results) => {
-                allPlayersData = results.data;
-                console.log('Database caricato per l\'analisi.');
-                // Rendi l'input di ricerca disponibile
-                searchPlayerInput.disabled = false;
-            },
-            error: (error) => {
-                console.error('Errore nel caricamento del database:', error);
+        return new Promise((resolve, reject) => {
+            const cachedData = localStorage.getItem('fantahack_csv_data');
+            if (cachedData) {
+                allPlayersData = JSON.parse(cachedData);
+                console.log('Database caricato dalla cache.');
+                resolve(allPlayersData);
+            } else {
+                // Reindirizza alla home se non ci sono dati
+                window.location.href = '/';
+                reject(new Error('Database non trovato. Torna alla home.'));
             }
         });
     }

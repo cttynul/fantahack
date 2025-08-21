@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const databaseFile = '../Database.csv';
     let allPlayersData = [];
     let setPiecesData = {};
     let goalkeepersData = {};
@@ -12,45 +11,27 @@ document.addEventListener('DOMContentLoaded', () => {
     const topPlayerChartContainer = document.getElementById('top-player-chart-container');
     const unicornChartContainer = document.getElementById('unicorn-chart-container');
     const setPiecesDiv = document.getElementById('set-pieces-data');
-    const goalkeeperDiv = document = document.getElementById('goalkeeper-data');
+    const goalkeeperDiv = document.getElementById('goalkeeper-data');
     const flexContainer = document.getElementById('set-pieces-goalkeeper-container');
 
-    // Funzione per caricare il database dei giocatori
-    function loadDatabase() {
+    async function loadDatabase() {
         return new Promise((resolve, reject) => {
-            Papa.parse(databaseFile, {
-                download: true,
-                header: true,
-                skipEmptyLines: true,
-                complete: (results) => {
-                    allPlayersData = results.data;
-                    console.log('Database giocatori caricato.');
-                    populateTeamSelect(allPlayersData);
-                    resolve();
-                },
-                error: (error) => {
-                    console.error('Errore nel caricamento del database:', error);
-                    reject(error);
+            const cachedData = localStorage.getItem('fantahack_csv_data');
+            const cachedTimestamp = localStorage.getItem('fantahack_csv_timestamp');
+            
+            if (cachedData && cachedTimestamp) {
+                const age = Date.now() - parseInt(cachedTimestamp);
+                if (age < 24 * 60 * 60 * 1000) { // 24 ore in millisecondi
+                    console.log('Database caricato dalla cache.');
+                    resolve(JSON.parse(cachedData));
+                    return;
                 }
-            });
+            }
+            
+            // Se non ci sono dati in cache validi, reindirizza alla home
+            window.location.href = '/';
+            reject(new Error('Database non trovato. Torna alla home.'));
         });
-    }
-
-    // Funzione per caricare i file Markdown
-    async function loadMarkdownFiles() {
-        try {
-            const rigoristiResponse = await fetch('../RIGORISTI.md');
-            const rigoristiText = await rigoristiResponse.text();
-            setPiecesData = parseMarkdownFile(rigoristiText);
-
-            const portieriResponse = await fetch('../PORTIERI.md');
-            const portieriText = await portieriResponse.text();
-            goalkeepersData = parseGoalkeepersMarkdown(portieriText);
-
-            console.log('File Markdown caricati.');
-        } catch (error) {
-            console.error('Errore nel caricamento dei file Markdown:', error);
-        }
     }
 
     // Funzione per analizzare il file RIGORISTI.md
@@ -281,26 +262,88 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
     }
 
-    // Listener per la selezione della squadra
-    teamSelect.addEventListener('change', (e) => {
-        const selectedTeam = e.target.value;
-        if (selectedTeam) {
-            displayTeam(selectedTeam);
-        } else {
-            teamDetailsDiv.style.display = 'none';
-            noTeamFoundMessage.textContent = 'Nessuna squadra selezionata. Inizia a selezionare sopra.';
-            noTeamFoundMessage.style.display = 'block';
+    async function loadMarkdownFiles() {
+        try {
+            const [rigoristiResponse, portieriResponse] = await Promise.all([
+                fetch('../RIGORISTI.md'),
+                fetch('../PORTIERI.md')
+            ]);
+
+            if (!rigoristiResponse.ok || !portieriResponse.ok) {
+                throw new Error('Errore nel caricamento dei file Markdown');
+            }
+
+            const [rigoristiText, portieriText] = await Promise.all([
+                rigoristiResponse.text(),
+                portieriResponse.text()
+            ]);
+
+            setPiecesData = parseMarkdownFile(rigoristiText);
+            goalkeepersData = parseGoalkeepersMarkdown(portieriText);
+            
+            console.log('File Markdown caricati con successo');
+            return true;
+        } catch (error) {
+            console.error('Errore nel caricamento dei file Markdown:', error);
+            return false;
         }
-    });
-
-    // Avvia il caricamento dei dati
-    Promise.all([loadDatabase(), loadMarkdownFiles()]);
-
-    // Funzionalità spoiler per la tabella dei giocatori
-    const spoilerHeader = document.querySelector('#team-players-table .spoiler-header');
-    if (spoilerHeader) {
-        spoilerHeader.addEventListener('click', () => {
-            document.getElementById('team-players-table').classList.toggle('collapsed');
-        });
     }
+
+    async function init() {
+        try {
+            // Mostra un loading overlay
+            if (document.getElementById('loading-overlay')) {
+                document.getElementById('loading-overlay').style.display = 'flex';
+            }
+
+            // Carica il database
+            allPlayersData = await loadDatabase();
+            console.log("Database caricato:", allPlayersData.length, "giocatori");
+
+            // Carica i file Markdown
+            await loadMarkdownFiles();
+
+            // Popola il select delle squadre
+            populateTeamSelect(allPlayersData);
+
+            // Nascondi il loading overlay
+            if (document.getElementById('loading-overlay')) {
+                document.getElementById('loading-overlay').style.display = 'none';
+            }
+
+            // Inizializza gli event listener
+            teamSelect.addEventListener('change', (e) => {
+                const selectedTeam = e.target.value;
+                if (selectedTeam) {
+                    displayTeam(selectedTeam);
+                } else {
+                    teamDetailsDiv.style.display = 'none';
+                    noTeamFoundMessage.textContent = 'Nessuna squadra selezionata. Inizia a selezionare sopra.';
+                    noTeamFoundMessage.style.display = 'block';
+                }
+            });
+
+            // Inizializza lo spoiler
+            const spoilerHeader = document.querySelector('#team-players-table .spoiler-header');
+            if (spoilerHeader) {
+                spoilerHeader.addEventListener('click', () => {
+                    document.getElementById('team-players-table').classList.toggle('collapsed');
+                });
+            }
+
+        } catch (error) {
+            console.error("Errore nell'inizializzazione:", error);
+            if (noTeamFoundMessage) {
+                noTeamFoundMessage.textContent = 'Errore nel caricamento dei dati. Torna alla home per ricaricare il Database.csv.';
+                noTeamFoundMessage.style.display = 'block';
+            }
+            // Nascondi il loading overlay in caso di errore
+            if (document.getElementById('loading-overlay')) {
+                document.getElementById('loading-overlay').style.display = 'none';
+            }
+        }
+    }
+
+    // Avvia l'inizializzazione
+    init();
 });

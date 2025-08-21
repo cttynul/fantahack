@@ -1,3 +1,7 @@
+const CSV_CACHE_KEY = 'fantahack_csv_data';
+const CSV_CACHE_TIMESTAMP = 'fantahack_csv_timestamp';
+const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 ore in millisecondi
+
 document.addEventListener('DOMContentLoaded', () => {
     const databaseFile = '../Database.csv';
     let allPlayersData = [];
@@ -121,23 +125,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function loadCSV() {
         return new Promise((resolve, reject) => {
-            Papa.parse(databaseFile, {
-                download: true,
-                header: true,
-                skipEmptyLines: true,
-                complete: function(results) {
-                    if (results.errors.length) {
-                        console.error("Error parsing CSV:", results.errors);
-                        reject(results.errors);
-                    } else {
-                        resolve(results.data);
-                    }
-                },
-                error: function(err) {
-                    console.error("Error fetching CSV:", err);
-                    reject(err);
+            // Check for cached data first
+            const cachedData = localStorage.getItem(CSV_CACHE_KEY);
+            const cachedTimestamp = localStorage.getItem(CSV_CACHE_TIMESTAMP);
+            
+            if (cachedData && cachedTimestamp) {
+                const age = Date.now() - parseInt(cachedTimestamp);
+                if (age < CACHE_DURATION) {
+                    console.log('Database caricato dalla cache.');
+                    resolve(JSON.parse(cachedData));
+                    return;
                 }
-            });
+            }
+
+            // If no valid cache, redirect to home
+            window.location.href = '/';
+            reject(new Error('Database non trovato. Torna alla home per caricare il Database.csv.'));
         });
     }
 
@@ -215,6 +218,10 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log("Dati caricati:", allPlayersData.length, "giocatori.");
             closeLoadingModal()
 
+            if (!allPlayersData || allPlayersData.length === 0) {
+                throw new Error('Nessun dato trovato nel database');
+            }
+
             allPlayersData.forEach(player => {
                 for (const key in player) {
                     if (player.hasOwnProperty(key)) {
@@ -240,8 +247,12 @@ document.addEventListener('DOMContentLoaded', () => {
             updateObjectivesTable();
 
         } catch (error) {
-            tableBody.innerHTML = '<tr><td colspan="99" style="color: red;">Errore nel caricamento dei dati. Controlla il file Database.csv.</td></tr>';
             console.error("Errore fatale nell'inizializzazione:", error);
+            if (error.message.includes('Database non trovato')) {
+                window.location.href = '/';
+            } else {
+                tableBody.innerHTML = '<tr><td colspan="99" style="color: red;">Errore nel caricamento dei dati. Torna alla home per ricaricare il Database.csv.</td></tr>';
+            }
         }
     }
 
