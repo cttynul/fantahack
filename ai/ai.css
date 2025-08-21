@@ -1,0 +1,183 @@
+:root {
+    --green-field: #4a8c4f;
+    --line-color: #dbe4e4;
+    --player-card-bg: #f8f9fa;
+    --player-card-shadow: rgba(0, 0, 0, 0.1);
+    --bench-bg: #e0e6e0;
+    --dark-text: #333;
+    --white: #fff;
+}
+
+body {
+    background-color: var(--white);
+}
+
+.teams-container {
+    padding: 20px;
+    max-width: 900px;
+    margin: 20px auto;
+}
+
+.ai-description {
+    background-color: #f0f4f7;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    color: var(--dark-text);
+}
+
+.team-section {
+    margin-bottom: 50px;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: var(--green-field); /* Sfondo verde per ogni singolo campo */
+    border: 2px solid var(--line-color);
+    box-shadow: 0 4px 8px var(--player-card-shadow);
+    color: var(--white);
+}
+
+.team-section h2 {
+    text-align: center;
+    color: var(--white);
+    text-shadow: 2px 2px 4px #000000;
+    font-size: 2.5em;
+    margin-top: 0;
+}
+
+.player-field {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    height: 550px;
+    position: relative;
+    padding: 10px 0;
+}
+
+.player-row {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    gap: 15px;
+    flex-wrap: wrap;
+    position: relative;
+    z-index: 1;
+}
+
+.player-card {
+    background-color: var(--player-card-bg);
+    color: var(--dark-text);
+    border-radius: 8px;
+    padding: 10px 15px;
+    text-align: center;
+    box-shadow: 0 2px 4px var(--player-card-shadow);
+    transition: transform 0.2s;
+    flex: 0 1 auto;
+    width: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.player-card:hover {
+    transform: translateY(-5px);
+}
+
+.player-card h4 {
+    margin: 0;
+    font-size: 1.1em;
+}
+
+.player-icon {
+    font-size: 1.2em;
+    margin-right: 5px;
+}
+
+.field-lines::before,
+.field-lines::after {
+    content: '';
+    position: absolute;
+    background-color: var(--line-color);
+}
+
+.field-lines::before {
+    width: 90%;
+    height: 2px;
+    top: 50%;
+    left: 5%;
+    transform: translateY(-50%);
+}
+
+.field-lines::after {
+    width: 150px;
+    height: 150px;
+    border: 2px solid var(--line-color);
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.goalkeeper-row {
+    position: absolute;
+    bottom: 20px;
+}
+
+.defender-row {
+    position: absolute;
+    bottom: 120px;
+}
+
+.midfielder-row {
+    position: absolute;
+    bottom: 240px;
+}
+
+.attacker-row {
+    position: absolute;
+    bottom: 400px;
+}
+
+.bench-section {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: var(--bench-bg);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.bench-section h3 {
+    text-align: center;
+    color: var(--dark-text);
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+.bench-players-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+}
+
+.bench-player-card {
+    background-color: var(--white);
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 8px 12px;
+    text-align: center;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    color: var(--dark-text);
+}
+
+.bench-player-card h4 {
+    margin: 0;
+    font-size: 1em;
+}
+
+.bench-player-card p {
+    margin: 0;
+    font-size: 0.8em;
+    color: #666;
+}

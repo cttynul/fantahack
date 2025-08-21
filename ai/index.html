@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fantahackalcio Manager - Squadre AI</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="./ai.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="icon" type="image/png" href="../favicon.png">
+</head>
+<body style="background-color: white;">
+    <nav class="main-nav">
+        <div class="nav-links">
+            <a href="../" class="nav-item">
+                <i class="fas fa-home"></i> Home
+            </a>
+            <a href="../player/" class="nav-item">
+                <i class="fas fa-search"></i> Analisi Giocatore
+            </a>
+            <a href="../team/" class="nav-item">
+                <i class="fas fa-users"></i> Analisi Squadra
+            </a>
+            <a href="." class="nav-item active">
+                <i class="fas fa-robot"></i> Squadre AI
+            </a>
+            <a href="../legacy/" class="nav-item">
+                <i class="fas fa-futbol"></i>Legacy
+            </a>
+        </div>
+    </nav>
+    <div class="container player-analysis-container">
+        <h1>
+            <img src="../logo.png" style="width: 250px">
+            <br>
+            Squadre AI
+        </h1>
+        <div class="ai-description">
+            <p>
+                Queste squadre sono state generate da un'intelligenza artificiale avanzata che ha analizzato il database dei giocatori
+                L'obiettivo è creare formazioni ottimali, combinando i migliori giocatori disponibili per formare la squadra più competitiva possibile in base a metriche di rendimento e valore.
+                <br><br>L'IA ha selezionato 11 titolari (1 portiere, 3 difensori, 4 centrocampisti, 3 attaccanti) e una lista di panchinari per ogni rosa, offrendo una visione di come una macchina "penserebbe" il calcio.
+            </p>
+        </div>
+        <div id="loading-overlay" class="loading-overlay">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">Caricamento Squadre AI...</div>
+        </div>
+        <div id="teams-container" class="teams-container">
+            </div>
+    </div>
+    
+    <footer class="main-footer">
+        <p>🄯 2025 Fantahackalcio Manager</p>
+        <p>Ideato, sviluppato e regalato a voi con il 💚 da <a href="https://github.com/cttynul" target="_blank" rel="noopener noreferrer">cttynul</a></p>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <script src="./ai.js"></script>
+</body>
+</html>
